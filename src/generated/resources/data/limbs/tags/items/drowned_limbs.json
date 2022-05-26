@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "limbs:drowned_head",
+    "limbs:drowned_torso",
+    "limbs:drowned_left_arm",
+    "limbs:drowned_right_arm",
+    "limbs:drowned_left_leg",
+    "limbs:drowned_right_leg"
+  ]
+}

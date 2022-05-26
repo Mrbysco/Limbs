@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "limbs:skeleton_torso",
+    "limbs:stray_torso",
+    "limbs:wither_skeleton_torso",
+    "limbs:zombie_torso",
+    "limbs:husk_torso",
+    "limbs:drowned_torso",
+    "limbs:enderman_torso",
+    "limbs:piglin_torso",
+    "limbs:zombified_piglin_torso",
+    "limbs:piglin_brute_torso"
+  ]
+}

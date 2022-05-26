@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "limbs:skeleton_right_leg",
+    "limbs:stray_right_leg",
+    "limbs:wither_skeleton_right_leg",
+    "limbs:zombie_right_leg",
+    "limbs:husk_right_leg",
+    "limbs:drowned_right_leg",
+    "limbs:enderman_right_leg",
+    "limbs:piglin_right_leg",
+    "limbs:zombified_piglin_right_leg",
+    "limbs:piglin_brute_right_leg"
+  ]
+}

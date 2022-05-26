@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:heads",
+    "limbs:skeleton_head",
+    "limbs:stray_head",
+    "limbs:wither_skeleton_head",
+    "limbs:zombie_head",
+    "limbs:husk_head",
+    "limbs:drowned_head",
+    "limbs:enderman_head",
+    "limbs:piglin_head",
+    "limbs:zombified_piglin_head",
+    "limbs:piglin_brute_head"
+  ]
+}

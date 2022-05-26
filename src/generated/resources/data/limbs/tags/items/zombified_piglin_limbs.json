@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "limbs:zombified_piglin_head",
+    "limbs:zombified_piglin_torso",
+    "limbs:zombified_piglin_left_arm",
+    "limbs:zombified_piglin_right_arm",
+    "limbs:zombified_piglin_left_leg",
+    "limbs:zombified_piglin_right_leg"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "limbs:piglin_brute_head",
+    "limbs:piglin_brute_torso",
+    "limbs:piglin_brute_left_arm",
+    "limbs:piglin_brute_right_arm",
+    "limbs:piglin_brute_left_leg",
+    "limbs:piglin_brute_right_leg"
+  ]
+}

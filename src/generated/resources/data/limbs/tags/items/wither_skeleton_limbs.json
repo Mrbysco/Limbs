@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "limbs:wither_skeleton_head",
+    "limbs:wither_skeleton_torso",
+    "limbs:wither_skeleton_left_arm",
+    "limbs:wither_skeleton_right_arm",
+    "limbs:wither_skeleton_left_leg",
+    "limbs:wither_skeleton_right_leg"
+  ]
+}

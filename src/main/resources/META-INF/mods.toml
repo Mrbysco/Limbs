@@ -1,0 +1,28 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+issueTrackerURL="https://github.com/Mrbysco/limbs/issues"
+license="MIT"
+
+[[mods]]
+modId="limbs"
+version="${file.jarVersion}"
+displayName="Limbs"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/limbs"
+authors="Mrbysco"
+description='''
+I read a book about limbs taking over the world
+
+It was armageddon
+'''
+[[dependencies.limbs]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.18.2,1.19)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.limbs]]
+modId="curios"
+mandatory=true
+versionRange="[1.18.2-5.0.7.0,]"
+ordering="NONE"
+side="BOTH"

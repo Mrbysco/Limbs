@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "limbs:piglin_head",
+    "limbs:piglin_torso",
+    "limbs:piglin_left_arm",
+    "limbs:piglin_right_arm",
+    "limbs:piglin_left_leg",
+    "limbs:piglin_right_leg"
+  ]
+}

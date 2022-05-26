@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "limbs:enderman_head",
+    "limbs:enderman_torso",
+    "limbs:enderman_left_arm",
+    "limbs:enderman_right_arm",
+    "limbs:enderman_left_leg",
+    "limbs:enderman_right_leg"
+  ]
+}

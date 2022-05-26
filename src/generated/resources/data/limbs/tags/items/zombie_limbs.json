@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "limbs:zombie_head",
+    "limbs:zombie_torso",
+    "limbs:zombie_left_arm",
+    "limbs:zombie_right_arm",
+    "limbs:zombie_left_leg",
+    "limbs:zombie_right_leg"
+  ]
+}
