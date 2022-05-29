@@ -34,6 +34,7 @@ public class Limbs {
 		eventBus.addListener(this::sendImc);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			eventBus.addListener(ClientHandler::onClientSetup);
 			MinecraftForge.EVENT_BUS.addListener(ClientHandler::onRenderArm);
 			MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ClientHandler::onPlayerRenderPre);
 			MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ClientHandler::onPlayerRenderPost);

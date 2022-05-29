@@ -8,7 +8,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(LivingEntityRenderer.class)
 public interface LivingEntityRendererAccessor<T extends LivingEntity> {
 	@Invoker("getBob")
-	float limbsGetBob(T livingEntity, float partialTicks);
-
-
+	float limbs_getBob(T livingEntity, float partialTicks);
 }

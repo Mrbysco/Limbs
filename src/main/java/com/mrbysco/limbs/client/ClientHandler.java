@@ -19,16 +19,31 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.StandingAndWallBlockItem;
+import net.minecraft.world.level.block.AbstractSkullBlock;
 import net.minecraftforge.client.event.RenderArmEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
+import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
 import java.util.List;
 import java.util.Optional;
 
 public class ClientHandler {
+
+	public static void onClientSetup(FMLClientSetupEvent event) {
+		for (Item item : ForgeRegistries.ITEMS.getValues()) {
+			if (item instanceof StandingAndWallBlockItem blockItem && blockItem.getBlock() instanceof AbstractSkullBlock) {
+				CuriosRendererRegistry.register(item, CurioSkullRenderer::new);
+			}
+		}
+	}
 
 	public static void onRenderArm(RenderArmEvent event) {
 		final AbstractClientPlayer player = event.getPlayer();
@@ -75,7 +90,8 @@ public class ClientHandler {
 		final PlayerRenderer playerRenderer = event.getRenderer();
 		PlayerModel<?> playerModel = playerRenderer.getModel();
 
-		List<SlotResult> slotResults = CuriosApi.getCuriosHelper().findCurios(player, stack -> stack.getItem() instanceof PartItem);
+		List<SlotResult> slotResults = CuriosApi.getCuriosHelper().findCurios(player, stack -> stack.getItem() instanceof PartItem ||
+				(stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof AbstractSkullBlock));
 		for (SlotResult result : slotResults) {
 			ItemStack stack = result.stack();
 			if (stack.getItem() instanceof PartItem partItem) {
@@ -110,6 +126,9 @@ public class ClientHandler {
 						}
 					}
 				}
+			} else if (stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof AbstractSkullBlock skullBlock) {
+				playerModel.head.visible = false;
+				playerModel.hat.visible = false;
 			}
 		}
 	}
@@ -119,15 +138,17 @@ public class ClientHandler {
 		final PlayerRenderer playerRenderer = event.getRenderer();
 		PlayerModel<?> playerModel = playerRenderer.getModel();
 
-		List<SlotResult> slotResults = CuriosApi.getCuriosHelper().findCurios(player, stack -> stack.getItem() instanceof PartItem);
+		final List<SlotResult> slotResults = CuriosApi.getCuriosHelper().findCurios(player, stack -> stack.getItem() instanceof PartItem ||
+				(stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof AbstractSkullBlock));
 		for (SlotResult result : slotResults) {
-			ItemStack stack = result.stack();
+			final ItemStack stack = result.stack();
+			final PoseStack poseStack = event.getPoseStack();
+			final int packedLight = event.getPackedLight();
 			if (stack.getItem() instanceof PartItem partItem) {
 				final int i = OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(false));
 				final ResourceLocation partRegistry = partItem.getPartRegistry();
 				BodyPartType partType = BodyPartRegistry.BODY_PARTS.get().getValue(partRegistry);
 				if (partType != null) {
-					PoseStack poseStack = event.getPoseStack();
 					poseStack.pushPose();
 
 					if (player instanceof AbstractClientPlayer clientPlayer) {
@@ -140,9 +161,7 @@ public class ClientHandler {
 					poseStack.translate(0, (1f / 16) * 24, 0);
 					poseStack.scale(1, -1, -1);
 					switch (partLocation) {
-						case HEAD -> {
-							bodyPart.loadPose(playerModel.head.storePose());
-						}
+						case HEAD -> bodyPart.loadPose(playerModel.head.storePose());
 						case TORSO -> bodyPart.loadPose(playerModel.body.storePose());
 						case LEFT_ARM -> bodyPart.loadPose(playerModel.leftArm.storePose());
 						case RIGHT_ARM -> bodyPart.loadPose(playerModel.rightArm.storePose());
@@ -151,11 +170,11 @@ public class ClientHandler {
 					}
 					poseStack.mulPose(Vector3f.YN.rotationDegrees(180F));
 
-					bodyPart.render(poseStack, event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getTexture())), event.getPackedLight(), i);
+					bodyPart.render(poseStack, event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getTexture())), packedLight, i);
 					if (partType.getSecondTexture() != null) {
 						poseStack.scale(1.01F, 1.01F, 1.01F);
 						poseStack.translate(0.001F, -0.005F, 0.001F);
-						bodyPart.render(poseStack, event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getSecondTexture())), event.getPackedLight(), i);
+						bodyPart.render(poseStack, event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getSecondTexture())), packedLight, i);
 					}
 					poseStack.popPose();
 				}
@@ -167,8 +186,7 @@ public class ClientHandler {
 		boolean shouldSit = player.isPassenger() && (player.getVehicle() != null && player.getVehicle().shouldRiderSit());
 		float f = Mth.rotLerp(partialTicks, player.yBodyRotO, player.yBodyRot);
 		float f1 = Mth.rotLerp(partialTicks, player.yHeadRotO, player.yHeadRot);
-		if (shouldSit && player.getVehicle() instanceof LivingEntity) {
-			LivingEntity livingentity = (LivingEntity) player.getVehicle();
+		if (shouldSit && player.getVehicle() instanceof LivingEntity livingentity) {
 			f = Mth.rotLerp(partialTicks, livingentity.yBodyRotO, livingentity.yBodyRot);
 			float f2 = f1 - f;
 			float f3 = Mth.wrapDegrees(f2);
@@ -187,7 +205,7 @@ public class ClientHandler {
 		}
 
 
-		float f7 = ((LivingEntityRendererAccessor) playerRenderer).limbsGetBob(player, partialTicks);
-		((PlayerRendererAccessor) playerRenderer).limbsSetupRotations(player, poseStack, f7, f, partialTicks);
+		float f7 = ((LivingEntityRendererAccessor) playerRenderer).limbs_getBob(player, partialTicks);
+		((PlayerRendererAccessor) playerRenderer).limbs_setupRotations(player, poseStack, f7, f, partialTicks);
 	}
 }

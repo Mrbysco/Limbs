@@ -5,6 +5,7 @@ import com.mrbysco.limbs.lootmodifiers.LimbDropsModifier;
 import com.mrbysco.limbs.registry.LimbLootModifiers;
 import com.mrbysco.limbs.registry.LimbRegistry;
 import com.mrbysco.limbs.registry.helper.LimbRegHelper;
+import com.mrbysco.limbs.util.LimbTags;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.core.Registry;
@@ -13,7 +14,6 @@ import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -166,13 +166,6 @@ public class LimbDataGen {
 	}
 
 	public static class LimbItemTags extends ItemTagsProvider {
-		public static final TagKey<Item> HEADS = ItemTags.create(new ResourceLocation("forge", "heads"));
-		public static final TagKey<Item> HEAD = ItemTags.create(new ResourceLocation("curios", "head"));
-		public static final TagKey<Item> TORSO = ItemTags.create(new ResourceLocation("curios", "torso"));
-		public static final TagKey<Item> LEFT_ARM = ItemTags.create(new ResourceLocation("curios", "left_arm"));
-		public static final TagKey<Item> RIGHT_ARM = ItemTags.create(new ResourceLocation("curios", "right_arm"));
-		public static final TagKey<Item> LEFT_LEG = ItemTags.create(new ResourceLocation("curios", "left_leg"));
-		public static final TagKey<Item> RIGHT_LEG = ItemTags.create(new ResourceLocation("curios", "right_leg"));
 
 		public LimbItemTags(DataGenerator dataGenerator, BlockTagsProvider blockTagsProvider, ExistingFileHelper existingFileHelper) {
 			super(dataGenerator, blockTagsProvider, Reference.MOD_ID, existingFileHelper);
@@ -180,7 +173,7 @@ public class LimbDataGen {
 
 		@Override
 		protected void addTags() {
-			this.tag(HEAD).addTag(HEADS);
+			this.tag(LimbTags.HEAD).addTag(LimbTags.HEADS);
 
 			makeLimbTags(LimbRegistry.SKELETON_LIMBS);
 			makeLimbTags(LimbRegistry.STRAY_LIMBS);
@@ -197,12 +190,12 @@ public class LimbDataGen {
 
 		private void makeLimbTags(LimbRegHelper limbs) {
 			this.tag(limbs.getTag()).add(limbs.getHead(), limbs.getTorso(), limbs.getLeftArm(), limbs.getRightArm(), limbs.getLeftLeg(), limbs.getRightLeg());
-			this.tag(HEAD).add(limbs.getHead());
-			this.tag(TORSO).add(limbs.getTorso());
-			this.tag(LEFT_ARM).add(limbs.getLeftArm());
-			this.tag(RIGHT_ARM).add(limbs.getRightArm());
-			this.tag(LEFT_LEG).add(limbs.getLeftLeg());
-			this.tag(RIGHT_LEG).add(limbs.getRightLeg());
+			this.tag(LimbTags.HEAD).add(limbs.getHead());
+			this.tag(LimbTags.TORSO).add(limbs.getTorso());
+			this.tag(LimbTags.LEFT_ARM).add(limbs.getLeftArm());
+			this.tag(LimbTags.RIGHT_ARM).add(limbs.getRightArm());
+			this.tag(LimbTags.LEFT_LEG).add(limbs.getLeftLeg());
+			this.tag(LimbTags.RIGHT_LEG).add(limbs.getRightLeg());
 		}
 	}
 

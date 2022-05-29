@@ -9,5 +9,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(PlayerRenderer.class)
 public interface PlayerRendererAccessor {
 	@Invoker("setupRotations")
-	void limbsSetupRotations(AbstractClientPlayer clientPlayer, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks);
+	void limbs_setupRotations(AbstractClientPlayer clientPlayer, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks);
 }
