@@ -5,6 +5,7 @@ import com.mrbysco.limbs.config.LimbConfig;
 import com.mrbysco.limbs.registry.LimbLootModifiers;
 import com.mrbysco.limbs.registry.LimbRegistry;
 import com.mrbysco.limbs.registry.PartRegistry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -18,6 +19,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 
 @Mod(Reference.MOD_ID)
@@ -43,11 +45,17 @@ public class Limbs {
 	}
 
 	public void sendImc(InterModEnqueueEvent event) {
-		InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("head").size(1).build());
-		InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("torso").size(1).build());
-		InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("left_arm").size(1).build());
-		InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("right_arm").size(1).build());
-		InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("left_leg").size(1).build());
-		InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("right_leg").size(1).build());
+		InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("head").icon(
+				new ResourceLocation(CuriosApi.MODID, "slot/empty_curio_slot")).size(1).build());
+		InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("torso").icon(
+				new ResourceLocation(CuriosApi.MODID, "slot/empty_curio_slot")).size(1).build());
+		InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("left_arm").icon(
+				new ResourceLocation(CuriosApi.MODID, "slot/empty_curio_slot")).size(1).build());
+		InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("right_arm").icon(
+				new ResourceLocation(CuriosApi.MODID, "slot/empty_curio_slot")).size(1).build());
+		InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("left_leg").icon(
+				new ResourceLocation(CuriosApi.MODID, "slot/empty_curio_slot")).size(1).build());
+		InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("right_leg").icon(
+				new ResourceLocation(CuriosApi.MODID, "slot/empty_curio_slot")).size(1).build());
 	}
 }

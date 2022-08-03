@@ -26,9 +26,9 @@ import net.minecraftforge.client.model.generators.ModelFile.UncheckedModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 import net.minecraftforge.common.data.LanguageProvider;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -40,13 +40,13 @@ public class LimbDataGen {
 
 		if (event.includeServer()) {
 			BlockTagsProvider provider = new BlockTagsProvider(generator, Reference.MOD_ID, helper);
-			generator.addProvider(new LimbItemTags(generator, provider, helper));
-			generator.addProvider(new LimbEntityTags(generator, helper));
-			generator.addProvider(new LimbLootProvider(generator));
+			generator.addProvider(event.includeServer(), new LimbItemTags(generator, provider, helper));
+			generator.addProvider(event.includeServer(), new LimbEntityTags(generator, helper));
+			generator.addProvider(event.includeServer(), new LimbLootProvider(generator));
 		}
 		if (event.includeClient()) {
-			generator.addProvider(new Language(generator));
-			generator.addProvider(new ItemModels(generator, helper));
+			generator.addProvider(event.includeClient(), new Language(generator));
+			generator.addProvider(event.includeClient(), new ItemModels(generator, helper));
 		}
 	}
 
@@ -143,12 +143,12 @@ public class LimbDataGen {
 		@Override
 		protected void registerModels() {
 			for (RegistryObject<Item> limbObject : LimbRegistry.ITEMS.getEntries()) {
-				makeLimb(limbObject.get());
+				makeLimb(limbObject.getId());
 			}
 		}
 
-		private void makeLimb(Item item) {
-			getBuilder(item.getRegistryName().getPath())
+		private void makeLimb(ResourceLocation location) {
+			getBuilder(location.getPath())
 					.parent(new UncheckedModelFile(mcLoc("item/template_skull")))
 					.transforms().transform(TransformType.THIRD_PERSON_RIGHT_HAND)
 					.rotation(45, 45, 0)
@@ -224,7 +224,7 @@ public class LimbDataGen {
 
 		@Override
 		protected void start() {
-			this.add("limb_drops", LimbLootModifiers.LIMB_DROPS.get(), new LimbDropsModifier(
+			this.add("limb_drops", new LimbDropsModifier(
 					new LootItemCondition[]{
 							LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(LimbEntityTags.LIMB_ABLE)).build(),
 							LootItemKilledByPlayerCondition.killedByPlayer().build()

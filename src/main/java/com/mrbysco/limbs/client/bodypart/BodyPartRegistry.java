@@ -19,7 +19,6 @@ public class BodyPartRegistry {
 	public static void onNewRegistry(NewRegistryEvent event) {
 		RegistryBuilder<BodyPartType> registryBuilder = new RegistryBuilder<>();
 		registryBuilder.setName(registryLocation);
-		registryBuilder.setType(BodyPartType.class);
 		registryBuilder.disableSaving();
 		BODY_PARTS = event.create(registryBuilder);
 	}

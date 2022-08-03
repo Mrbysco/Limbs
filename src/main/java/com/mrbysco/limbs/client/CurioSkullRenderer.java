@@ -20,7 +20,7 @@ public class CurioSkullRenderer implements ICurioRenderer {
 																		  PoseStack poseStack, RenderLayerParent<T, M> renderLayerParent,
 																		  MultiBufferSource multiBufferSource, int light, float limbSwing,
 																		  float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-		if (slotContext.identifier().equals("head")) {
+		if (slotContext.identifier().equals("head") && slotContext.visible()) {
 			if (!(renderLayerParent.getModel() instanceof HeadedModel headedModel)) {
 				return;
 			}

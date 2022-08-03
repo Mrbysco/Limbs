@@ -4,12 +4,11 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-public class BodyPartType extends ForgeRegistryEntry<BodyPartType> {
+public class BodyPartType {
 	private final LazyLoadedValue<ModelPart> inventoryPart;
 	private final LazyLoadedValue<ModelPart> bodyPart;
 	private final ResourceLocation texture;

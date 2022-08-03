@@ -1,12 +1,15 @@
 package com.mrbysco.limbs.lootmodifiers;
 
-import com.google.gson.JsonObject;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mrbysco.limbs.config.LimbConfig;
 import com.mrbysco.limbs.item.PartItem;
 import com.mrbysco.limbs.item.PartLocation;
 import com.mrbysco.limbs.registry.LimbRegistry;
 import com.mrbysco.limbs.registry.helper.LimbRegHelper;
-import net.minecraft.resources.ResourceLocation;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -14,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -23,18 +26,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LimbDropsModifier extends LootModifier {
+	public static final Supplier<Codec<LimbDropsModifier>> CODEC = Suppliers.memoize(() ->
+			RecordCodecBuilder.create(inst -> codecStart(inst).apply(inst, LimbDropsModifier::new)));
+
 	public LimbDropsModifier(LootItemCondition[] conditionsIn) {
 		super(conditionsIn);
 	}
 
 	@Nonnull
 	@Override
-	protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
+	protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
 		if (context.hasParam(LootContextParams.THIS_ENTITY)) {
 			Entity entity = context.getParam(LootContextParams.THIS_ENTITY);
 			EntityType<?> type = entity.getType();
 			for (LimbRegHelper limbRegHelper : LimbRegistry.REGISTERED_LIMBS) {
-				if (limbRegHelper.getEntityType() != null && limbRegHelper.getEntityType().getRegistryName().equals(type.getRegistryName())) {
+				if (limbRegHelper.getEntityType() != null && ForgeRegistries.ENTITY_TYPES.getKey(limbRegHelper.getEntityType()).equals(ForgeRegistries.ENTITY_TYPES.getKey(type))) {
 					List<Item> possibleLimbs = new ArrayList<>();
 					ForgeRegistries.ITEMS.tags().getTag(limbRegHelper.getTag()).stream().forEach(item -> {
 						if (LimbConfig.COMMON.dropHeads.get()) {
@@ -53,16 +59,8 @@ public class LimbDropsModifier extends LootModifier {
 		return generatedLoot;
 	}
 
-
-	public static class Serializer extends GlobalLootModifierSerializer<LimbDropsModifier> {
-		@Override
-		public LimbDropsModifier read(ResourceLocation name, JsonObject json, LootItemCondition[] conditionsIn) {
-			return new LimbDropsModifier(conditionsIn);
-		}
-
-		@Override
-		public JsonObject write(LimbDropsModifier instance) {
-			return makeConditions(instance.conditions);
-		}
+	@Override
+	public Codec<? extends IGlobalLootModifier> codec() {
+		return CODEC.get();
 	}
 }

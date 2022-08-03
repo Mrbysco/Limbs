@@ -1,18 +1,8 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
-    }
+plugins {
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '5.+'
+    id 'org.spongepowered.mixin'
 }
-apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'maven-publish'
 
 version = "${version}"
 group = 'com.mrbysco.limbs' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -128,11 +118,14 @@ dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    implementation fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
+
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
 
-    implementation fg.deobf("curse.maven:heads-574942:3809357")
-    implementation fg.deobf("curse.maven:fivehead-625228:3802786")
+    implementation fg.deobf("curse.maven:heads-574942:3871339")
+    implementation fg.deobf("curse.maven:fivehead-625228:3902862")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

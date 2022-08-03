@@ -86,7 +86,7 @@ public class ClientHandler {
 	}
 
 	public static void onPlayerRenderPre(RenderPlayerEvent.Pre event) {
-		final Player player = event.getPlayer();
+		final Player player = event.getEntity();
 		final PlayerRenderer playerRenderer = event.getRenderer();
 		PlayerModel<?> playerModel = playerRenderer.getModel();
 
@@ -94,7 +94,7 @@ public class ClientHandler {
 				(stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof AbstractSkullBlock));
 		for (SlotResult result : slotResults) {
 			ItemStack stack = result.stack();
-			if (stack.getItem() instanceof PartItem partItem) {
+			if (stack.getItem() instanceof PartItem partItem && result.slotContext().visible()) {
 				final ResourceLocation partRegistry = partItem.getPartRegistry();
 				BodyPartType partType = BodyPartRegistry.BODY_PARTS.get().getValue(partRegistry);
 				if (partType != null) {
@@ -134,49 +134,51 @@ public class ClientHandler {
 	}
 
 	public static void onPlayerRenderPost(RenderPlayerEvent.Post event) {
-		final Player player = event.getPlayer();
+		final Player player = event.getEntity();
 		final PlayerRenderer playerRenderer = event.getRenderer();
 		PlayerModel<?> playerModel = playerRenderer.getModel();
 
 		final List<SlotResult> slotResults = CuriosApi.getCuriosHelper().findCurios(player, stack -> stack.getItem() instanceof PartItem ||
 				(stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof AbstractSkullBlock));
 		for (SlotResult result : slotResults) {
-			final ItemStack stack = result.stack();
-			final PoseStack poseStack = event.getPoseStack();
-			final int packedLight = event.getPackedLight();
-			if (stack.getItem() instanceof PartItem partItem) {
-				final int i = OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(false));
-				final ResourceLocation partRegistry = partItem.getPartRegistry();
-				BodyPartType partType = BodyPartRegistry.BODY_PARTS.get().getValue(partRegistry);
-				if (partType != null) {
-					poseStack.pushPose();
+			if (result.slotContext().visible()) {
+				final ItemStack stack = result.stack();
+				final PoseStack poseStack = event.getPoseStack();
+				final int packedLight = event.getPackedLight();
+				if (stack.getItem() instanceof PartItem partItem) {
+					final int i = OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(false));
+					final ResourceLocation partRegistry = partItem.getPartRegistry();
+					BodyPartType partType = BodyPartRegistry.BODY_PARTS.get().getValue(partRegistry);
+					if (partType != null) {
+						poseStack.pushPose();
 
-					if (player instanceof AbstractClientPlayer clientPlayer) {
-						setupRotation(poseStack, clientPlayer, playerRenderer, event.getPartialTick());
-					}
+						if (player instanceof AbstractClientPlayer clientPlayer) {
+							setupRotation(poseStack, clientPlayer, playerRenderer, event.getPartialTick());
+						}
 
-					final ModelPart bodyPart = partType.getBodyPart();
-					final PartLocation partLocation = partItem.getPartLocation();
-					poseStack.scale(0.9375F, 0.9375F, 0.9375F);
-					poseStack.translate(0, (1f / 16) * 24, 0);
-					poseStack.scale(1, -1, -1);
-					switch (partLocation) {
-						case HEAD -> bodyPart.loadPose(playerModel.head.storePose());
-						case TORSO -> bodyPart.loadPose(playerModel.body.storePose());
-						case LEFT_ARM -> bodyPart.loadPose(playerModel.leftArm.storePose());
-						case RIGHT_ARM -> bodyPart.loadPose(playerModel.rightArm.storePose());
-						case LEFT_LEG -> bodyPart.loadPose(playerModel.leftLeg.storePose());
-						case RIGHT_LEG -> bodyPart.loadPose(playerModel.rightLeg.storePose());
-					}
-					poseStack.mulPose(Vector3f.YN.rotationDegrees(180F));
+						final ModelPart bodyPart = partType.getBodyPart();
+						final PartLocation partLocation = partItem.getPartLocation();
+						poseStack.scale(0.9375F, 0.9375F, 0.9375F);
+						poseStack.translate(0, (1f / 16) * 24, 0);
+						poseStack.scale(1, -1, -1);
+						switch (partLocation) {
+							case HEAD -> bodyPart.loadPose(playerModel.head.storePose());
+							case TORSO -> bodyPart.loadPose(playerModel.body.storePose());
+							case LEFT_ARM -> bodyPart.loadPose(playerModel.leftArm.storePose());
+							case RIGHT_ARM -> bodyPart.loadPose(playerModel.rightArm.storePose());
+							case LEFT_LEG -> bodyPart.loadPose(playerModel.leftLeg.storePose());
+							case RIGHT_LEG -> bodyPart.loadPose(playerModel.rightLeg.storePose());
+						}
+						poseStack.mulPose(Vector3f.YN.rotationDegrees(180F));
 
-					bodyPart.render(poseStack, event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getTexture())), packedLight, i);
-					if (partType.getSecondTexture() != null) {
-						poseStack.scale(1.01F, 1.01F, 1.01F);
-						poseStack.translate(0.001F, -0.005F, 0.001F);
-						bodyPart.render(poseStack, event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getSecondTexture())), packedLight, i);
+						bodyPart.render(poseStack, event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getTexture())), packedLight, i);
+						if (partType.getSecondTexture() != null) {
+							poseStack.scale(1.01F, 1.01F, 1.01F);
+							poseStack.translate(0.001F, -0.005F, 0.001F);
+							bodyPart.render(poseStack, event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getSecondTexture())), packedLight, i);
+						}
+						poseStack.popPose();
 					}
-					poseStack.popPose();
 				}
 			}
 		}

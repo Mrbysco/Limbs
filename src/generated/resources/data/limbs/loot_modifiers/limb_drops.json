@@ -1,15 +1,15 @@
 {
+  "type": "limbs:limb_drops",
   "conditions": [
     {
       "condition": "minecraft:entity_properties",
+      "entity": "this",
       "predicate": {
         "type": "#limbs:limb_able"
-      },
-      "entity": "this"
+      }
     },
     {
       "condition": "minecraft:killed_by_player"
     }
-  ],
-  "type": "limbs:limb_drops"
+  ]
 }

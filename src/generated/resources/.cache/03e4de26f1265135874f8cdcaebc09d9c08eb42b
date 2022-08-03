@@ -1,0 +1,17 @@
+// 1.19.1	2022-08-03T03:48:33.9191084	Tags for minecraft:item
+164831c7997d7b86927a7a0e86c9006e81e17415 data/curios/tags/items/head.json
+cab304df4862cf20ef35cc54e502418b6c60cc0c data/curios/tags/items/left_arm.json
+544085c6a3c0f9d16156580c58b34c5be4861c5d data/curios/tags/items/left_leg.json
+70f619851ca6c3a448a50a1e128b3983c62d97f6 data/curios/tags/items/right_arm.json
+f46488c336a28e0259fee0ac0adf2f40555e8fc4 data/curios/tags/items/right_leg.json
+e399f954a70697a7fd4de6c8807ad320cc31fa7f data/curios/tags/items/torso.json
+acb13e67568837c5a6c7c5d0825b65954b1d4c0c data/limbs/tags/items/drowned_limbs.json
+0d263045b0a4ca0324f26e0b7d9f3ff8c321763d data/limbs/tags/items/enderman_limbs.json
+ba51a755657d5caf75310ab7a161a2316ddcd059 data/limbs/tags/items/husk_limbs.json
+091ed869f52ce1c23dd6a06e3ca381b11555f8cc data/limbs/tags/items/piglin_brute_limbs.json
+ace5d0e56deed2a81612141e267d0a9f432de019 data/limbs/tags/items/piglin_limbs.json
+d2f17b86055c24937a468a783a4c88bed6a08325 data/limbs/tags/items/skeleton_limbs.json
+32fa4a8dd92688896b361e807c8a70c1df28a970 data/limbs/tags/items/stray_limbs.json
+7b22a74c005e48e9e42665129d4e4d872c6ba600 data/limbs/tags/items/wither_skeleton_limbs.json
+6790ce41d83ba2a6c7e12809475184afa5a561b3 data/limbs/tags/items/zombie_limbs.json
+fab9836a724de4f028267ec6ab28ab212a96103d data/limbs/tags/items/zombified_piglin_limbs.json
