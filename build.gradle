@@ -106,7 +106,7 @@ repositories {
         url = "https://maven.theillusivec4.top/"
     }
     maven {
-        url "https://cursemaven.com"
+        url = "https://cursemaven.com"
         content {
             includeGroup "curse.maven"
         }
@@ -123,8 +123,8 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
 
-    implementation fg.deobf("curse.maven:heads-574942:3871339")
-    implementation fg.deobf("curse.maven:fivehead-625228:3902862")
+//    implementation fg.deobf("curse.maven:heads-574942:3871339")
+//    implementation fg.deobf("curse.maven:fivehead-625228:3902862")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
