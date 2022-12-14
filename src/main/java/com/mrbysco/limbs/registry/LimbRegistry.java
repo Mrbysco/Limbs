@@ -31,8 +31,4 @@ public class LimbRegistry {
 		REGISTERED_LIMBS.add(limb);
 		return limb;
 	}
-
-	public static Properties propertyBuilder() {
-		return new Properties().tab(CreativeModeTab.TAB_MISC);
-	}
 }

@@ -1,7 +1,7 @@
 package com.mrbysco.limbs.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.mrbysco.limbs.client.bodypart.BodyPartRegistry;
 import com.mrbysco.limbs.client.bodypart.BodyPartType;
 import com.mrbysco.limbs.item.PartItem;
@@ -169,7 +169,7 @@ public class ClientHandler {
 							case LEFT_LEG -> bodyPart.loadPose(playerModel.leftLeg.storePose());
 							case RIGHT_LEG -> bodyPart.loadPose(playerModel.rightLeg.storePose());
 						}
-						poseStack.mulPose(Vector3f.YN.rotationDegrees(180F));
+						poseStack.mulPose(Axis.YN.rotationDegrees(180F));
 
 						bodyPart.render(poseStack, event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getTexture())), packedLight, i);
 						if (partType.getSecondTexture() != null) {

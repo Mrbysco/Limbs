@@ -65,17 +65,17 @@ public class LimbRegHelper {
 	public LimbRegHelper(String mobName, Supplier<EntityType<?>> typeSupplier) {
 		this.name = mobName;
 		this.ENTITY_TYPE = typeSupplier;
-		HEAD = LimbRegistry.ITEMS.register(mobName + "_head", () -> new PartItem(LimbRegistry.propertyBuilder(),
+		HEAD = LimbRegistry.ITEMS.register(mobName + "_head", () -> new PartItem(new Item.Properties(),
 				PartLocation.HEAD, new ResourceLocation(Reference.MOD_ID, mobName + "_head")));
-		TORSO = LimbRegistry.ITEMS.register(mobName + "_torso", () -> new PartItem(LimbRegistry.propertyBuilder(),
+		TORSO = LimbRegistry.ITEMS.register(mobName + "_torso", () -> new PartItem(new Item.Properties(),
 				PartLocation.TORSO, new ResourceLocation(Reference.MOD_ID, mobName + "_torso")));
-		LEFT_ARM = LimbRegistry.ITEMS.register(mobName + "_left_arm", () -> new PartItem(LimbRegistry.propertyBuilder(),
+		LEFT_ARM = LimbRegistry.ITEMS.register(mobName + "_left_arm", () -> new PartItem(new Item.Properties(),
 				PartLocation.LEFT_ARM, new ResourceLocation(Reference.MOD_ID, mobName + "_left_arm")));
-		RIGHT_ARM = LimbRegistry.ITEMS.register(mobName + "_right_arm", () -> new PartItem(LimbRegistry.propertyBuilder(),
+		RIGHT_ARM = LimbRegistry.ITEMS.register(mobName + "_right_arm", () -> new PartItem(new Item.Properties(),
 				PartLocation.RIGHT_ARM, new ResourceLocation(Reference.MOD_ID, mobName + "_right_arm")));
-		LEFT_LEG = LimbRegistry.ITEMS.register(mobName + "_left_leg", () -> new PartItem(LimbRegistry.propertyBuilder(),
+		LEFT_LEG = LimbRegistry.ITEMS.register(mobName + "_left_leg", () -> new PartItem(new Item.Properties(),
 				PartLocation.LEFT_LEG, new ResourceLocation(Reference.MOD_ID, mobName + "_left_leg")));
-		RIGHT_LEG = LimbRegistry.ITEMS.register(mobName + "_right_leg", () -> new PartItem(LimbRegistry.propertyBuilder(),
+		RIGHT_LEG = LimbRegistry.ITEMS.register(mobName + "_right_leg", () -> new PartItem(new Item.Properties(),
 				PartLocation.RIGHT_LEG, new ResourceLocation(Reference.MOD_ID, mobName + "_right_leg")));
 
 		LIMBS_TAG = ItemTags.create(new ResourceLocation(Reference.MOD_ID, name + "_limbs"));

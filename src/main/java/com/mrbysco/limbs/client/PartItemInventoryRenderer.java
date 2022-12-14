@@ -1,7 +1,7 @@
 package com.mrbysco.limbs.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.mrbysco.limbs.client.bodypart.BodyPartRegistry;
 import com.mrbysco.limbs.client.bodypart.BodyPartType;
 import com.mrbysco.limbs.item.PartItem;
@@ -52,8 +52,8 @@ public class PartItemInventoryRenderer extends BlockEntityWithoutLevelRenderer {
 						poseStack.translate(0, 0.5D, 0);
 					}
 				}
-				poseStack.mulPose(Vector3f.ZN.rotationDegrees(180F));
-				poseStack.mulPose(Vector3f.YN.rotationDegrees(180F));
+				poseStack.mulPose(Axis.ZN.rotationDegrees(180F));
+				poseStack.mulPose(Axis.YN.rotationDegrees(180F));
 				bodyPart.render(poseStack, bufferSource.getBuffer(RenderType.entityTranslucent(partType.getTexture())), combinedLight, combinedOverlay);
 				if (partType.getSecondTexture() != null) {
 					poseStack.scale(1.01F, 1.01F, 1.01F);

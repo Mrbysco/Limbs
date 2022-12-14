@@ -2,15 +2,15 @@ package com.mrbysco.limbs.datagen;
 
 import com.mrbysco.limbs.Reference;
 import com.mrbysco.limbs.lootmodifiers.LimbDropsModifier;
-import com.mrbysco.limbs.registry.LimbLootModifiers;
 import com.mrbysco.limbs.registry.LimbRegistry;
 import com.mrbysco.limbs.registry.helper.LimbRegHelper;
 import com.mrbysco.limbs.util.LimbTags;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.core.Registry;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -23,6 +23,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyC
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile.UncheckedModelFile;
+import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -30,33 +31,40 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class LimbDataGen {
 	@SubscribeEvent
 	public static void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
+		PackOutput packOutput = generator.getPackOutput();
 		ExistingFileHelper helper = event.getExistingFileHelper();
+		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
 		if (event.includeServer()) {
-			BlockTagsProvider provider = new BlockTagsProvider(generator, Reference.MOD_ID, helper);
-			generator.addProvider(event.includeServer(), new LimbItemTags(generator, provider, helper));
-			generator.addProvider(event.includeServer(), new LimbEntityTags(generator, helper));
-			generator.addProvider(event.includeServer(), new LimbLootProvider(generator));
+			LimbBlockTags provider = new LimbBlockTags(packOutput, lookupProvider, helper);
+			generator.addProvider(event.includeServer(), new LimbItemTags(packOutput, lookupProvider, provider, helper));
+			generator.addProvider(event.includeServer(), new LimbEntityTags(packOutput, lookupProvider, helper));
+			generator.addProvider(event.includeServer(), new LimbLootProvider(packOutput));
 		}
 		if (event.includeClient()) {
-			generator.addProvider(event.includeClient(), new Language(generator));
-			generator.addProvider(event.includeClient(), new ItemModels(generator, helper));
+			generator.addProvider(event.includeClient(), new Language(packOutput));
+			generator.addProvider(event.includeClient(), new ItemModels(packOutput, helper));
 		}
 	}
 
 	private static class Language extends LanguageProvider {
-		public Language(DataGenerator gen) {
-			super(gen, Reference.MOD_ID, "en_us");
+		public Language(PackOutput packOutput) {
+			super(packOutput, Reference.MOD_ID, "en_us");
 		}
 
 		@Override
 		protected void addTranslations() {
+			this.add("itemGroup.limbs.tab", "Limbs");
+
 			this.add("curios.identifier.left_arm", "Left Arm");
 			this.add("curios.identifier.right_arm", "Right Arm");
 			this.add("curios.identifier.torso", "Torso");
@@ -136,8 +144,8 @@ public class LimbDataGen {
 	}
 
 	private static class ItemModels extends ItemModelProvider {
-		public ItemModels(DataGenerator gen, ExistingFileHelper helper) {
-			super(gen, Reference.MOD_ID, helper);
+		public ItemModels(PackOutput packOutput, ExistingFileHelper helper) {
+			super(packOutput, Reference.MOD_ID, helper);
 		}
 
 		@Override
@@ -165,14 +173,26 @@ public class LimbDataGen {
 		}
 	}
 
-	public static class LimbItemTags extends ItemTagsProvider {
+	public static class LimbBlockTags extends BlockTagsProvider {
 
-		public LimbItemTags(DataGenerator dataGenerator, BlockTagsProvider blockTagsProvider, ExistingFileHelper existingFileHelper) {
-			super(dataGenerator, blockTagsProvider, Reference.MOD_ID, existingFileHelper);
+		public LimbBlockTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper helper) {
+			super(output, lookupProvider, Reference.MOD_ID, helper);
 		}
 
 		@Override
-		protected void addTags() {
+		protected void addTags(HolderLookup.Provider provider) {
+
+		}
+	}
+
+	public static class LimbItemTags extends ItemTagsProvider {
+
+		public LimbItemTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, BlockTagsProvider tagsProvider, ExistingFileHelper helper) {
+			super(packOutput, lookupProvider, tagsProvider, Reference.MOD_ID, helper);
+		}
+
+		@Override
+		protected void addTags(HolderLookup.Provider provider) {
 			this.tag(LimbTags.HEAD).addTag(LimbTags.HEADS);
 
 			makeLimbTags(LimbRegistry.SKELETON_LIMBS);
@@ -202,24 +222,24 @@ public class LimbDataGen {
 	public static class LimbEntityTags extends EntityTypeTagsProvider {
 		public static final TagKey<EntityType<?>> LIMB_ABLE = create(new ResourceLocation(Reference.MOD_ID, "limb_able"));
 
-		public LimbEntityTags(DataGenerator dataGenerator, ExistingFileHelper existingFileHelper) {
-			super(dataGenerator, Reference.MOD_ID, existingFileHelper);
+		public LimbEntityTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
+			super(packOutput, lookupProvider, Reference.MOD_ID, existingFileHelper);
 		}
 
 		@Override
-		protected void addTags() {
+		protected void addTags(HolderLookup.Provider provider) {
 			this.tag(LIMB_ABLE).add(EntityType.SKELETON, EntityType.STRAY, EntityType.WITHER_SKELETON, EntityType.ZOMBIE,
 					EntityType.HUSK, EntityType.DROWNED, EntityType.ENDERMAN, EntityType.PIGLIN, EntityType.PIGLIN_BRUTE, EntityType.ZOMBIFIED_PIGLIN);
 		}
 
 		private static TagKey<EntityType<?>> create(ResourceLocation location) {
-			return TagKey.create(Registry.ENTITY_TYPE_REGISTRY, location);
+			return TagKey.create(Registries.ENTITY_TYPE, location);
 		}
 	}
 
 	public static class LimbLootProvider extends GlobalLootModifierProvider {
-		public LimbLootProvider(DataGenerator generator) {
-			super(generator, Reference.MOD_ID);
+		public LimbLootProvider(PackOutput packOutput) {
+			super(packOutput, Reference.MOD_ID);
 		}
 
 		@Override
