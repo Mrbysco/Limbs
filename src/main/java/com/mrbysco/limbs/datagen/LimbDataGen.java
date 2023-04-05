@@ -6,7 +6,6 @@ import com.mrbysco.limbs.registry.LimbRegistry;
 import com.mrbysco.limbs.registry.helper.LimbRegHelper;
 import com.mrbysco.limbs.util.LimbTags;
 import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
@@ -17,6 +16,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
@@ -31,8 +32,8 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -45,8 +46,9 @@ public class LimbDataGen {
 		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
 		if (event.includeServer()) {
-			LimbBlockTags provider = new LimbBlockTags(packOutput, lookupProvider, helper);
-			generator.addProvider(event.includeServer(), new LimbItemTags(packOutput, lookupProvider, provider, helper));
+			LimbBlockTags limbBlockTagProvider;
+			generator.addProvider(event.includeServer(), limbBlockTagProvider = new LimbBlockTags(packOutput, lookupProvider, helper));
+			generator.addProvider(event.includeServer(), new LimbItemTags(packOutput, lookupProvider, limbBlockTagProvider.contentsGetter(), helper));
 			generator.addProvider(event.includeServer(), new LimbEntityTags(packOutput, lookupProvider, helper));
 			generator.addProvider(event.includeServer(), new LimbLootProvider(packOutput));
 		}
@@ -158,15 +160,15 @@ public class LimbDataGen {
 		private void makeLimb(ResourceLocation location) {
 			getBuilder(location.getPath())
 					.parent(new UncheckedModelFile(mcLoc("item/template_skull")))
-					.transforms().transform(TransformType.THIRD_PERSON_RIGHT_HAND)
+					.transforms().transform(ItemDisplayContext.THIRD_PERSON_RIGHT_HAND)
 					.rotation(45, 45, 0)
 					.translation(0, 0, 5)
 					.scale(0.5F, 0.5F, 0.5F).end()
-					.transform(TransformType.THIRD_PERSON_LEFT_HAND)
+					.transform(ItemDisplayContext.THIRD_PERSON_LEFT_HAND)
 					.rotation(45, 45, 0)
 					.translation(5, 5, 0)
 					.scale(0.5F, 0.5F, 0.5F).end()
-					.transform(TransformType.FIRST_PERSON_LEFT_HAND)
+					.transform(ItemDisplayContext.FIRST_PERSON_LEFT_HAND)
 					.rotation(0, 0, 0)
 					.translation(5, 5, 5)
 					.scale(0.5F, 0.5F, 0.5F).end();
@@ -187,8 +189,8 @@ public class LimbDataGen {
 
 	public static class LimbItemTags extends ItemTagsProvider {
 
-		public LimbItemTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, BlockTagsProvider tagsProvider, ExistingFileHelper helper) {
-			super(packOutput, lookupProvider, tagsProvider, Reference.MOD_ID, helper);
+		public LimbItemTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagLookup<Block>> blockTagProvider, ExistingFileHelper helper) {
+			super(packOutput, lookupProvider, blockTagProvider, Reference.MOD_ID, helper);
 		}
 
 		@Override

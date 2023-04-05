@@ -63,5 +63,6 @@
   "item.limbs.zombified_piglin_left_leg": "Zombified Piglin Left Leg",
   "item.limbs.zombified_piglin_right_arm": "Zombified Piglin Right Arm",
   "item.limbs.zombified_piglin_right_leg": "Zombified Piglin Right Leg",
-  "item.limbs.zombified_piglin_torso": "Zombified Piglin Torso"
+  "item.limbs.zombified_piglin_torso": "Zombified Piglin Torso",
+  "itemGroup.limbs.tab": "Limbs"
 }
