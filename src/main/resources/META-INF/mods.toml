@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[45,)"
+loaderVersion="[46,)"
 issueTrackerURL="https://github.com/Mrbysco/limbs/issues"
 license="MIT"
 
@@ -17,12 +17,12 @@ It was armageddon
 [[dependencies.limbs]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.19.4,1.20)"
+versionRange="[1.20,1.21)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.limbs]]
 modId="curios"
 mandatory=true
-versionRange="[1.19.4-5.1.4.2,]"
+versionRange="[5.2.0-beta.3+1.20.1,]"
 ordering="NONE"
 side="BOTH"

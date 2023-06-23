@@ -14,7 +14,7 @@ if (System.getenv().CURSEFORGE_KEY) {
             changelogType = 'markdown'
 
             relations {
-                requiredDependency "jei"
+                requiredDependency "curios"
             }
         }
     }

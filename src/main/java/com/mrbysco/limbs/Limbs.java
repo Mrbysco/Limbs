@@ -5,16 +5,11 @@ import com.mrbysco.limbs.config.LimbConfig;
 import com.mrbysco.limbs.registry.LimbLootModifiers;
 import com.mrbysco.limbs.registry.LimbRegistry;
 import com.mrbysco.limbs.registry.PartRegistry;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -27,8 +22,6 @@ import org.apache.logging.log4j.Logger;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 
-import java.util.List;
-
 @Mod(Reference.MOD_ID)
 public class Limbs {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -38,9 +31,9 @@ public class Limbs {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, LimbConfig.commonSpec);
 
 		LimbRegistry.ITEMS.register(eventBus);
+		LimbRegistry.CREATIVE_MODE_TABS.register(eventBus);
 		LimbLootModifiers.GLM.register(eventBus);
 
-		eventBus.addListener(this::registerCreativeTabs);
 		eventBus.addListener(this::sendImc);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
@@ -50,19 +43,6 @@ public class Limbs {
 			MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ClientHandler::onPlayerRenderPost);
 			PartRegistry.BODY_PARTS.register(eventBus);
 		});
-	}
-
-	private static CreativeModeTab TAB;
-
-	public void registerCreativeTabs(final CreativeModeTabEvent.Register event) {
-		TAB = event.registerCreativeModeTab(new ResourceLocation(Reference.MOD_ID, "tab"), builder ->
-				builder.icon(() -> new ItemStack(LimbRegistry.DROWNED_LIMBS.getHead()))
-						.title(Component.translatable("itemGroup.limbs.tab"))
-						.displayItems((displayParameters, output) -> {
-							List<ItemStack> stacks = LimbRegistry.ITEMS.getEntries().stream().map(reg -> new ItemStack(reg.get())).toList();
-							output.acceptAll(stacks);
-						})
-		);
 	}
 
 	public void sendImc(InterModEnqueueEvent event) {

@@ -2,18 +2,23 @@ package com.mrbysco.limbs.registry;
 
 import com.mrbysco.limbs.Reference;
 import com.mrbysco.limbs.registry.helper.LimbRegHelper;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LimbRegistry {
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Reference.MOD_ID);
+	public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Reference.MOD_ID);
+
 	public static final List<LimbRegHelper> REGISTERED_LIMBS = new ArrayList<>();
 
 	public static final LimbRegHelper SKELETON_LIMBS = register(new LimbRegHelper("skeleton", () -> EntityType.SKELETON));
@@ -31,4 +36,12 @@ public class LimbRegistry {
 		REGISTERED_LIMBS.add(limb);
 		return limb;
 	}
+
+	public static final RegistryObject<CreativeModeTab> LIMB_TAB = CREATIVE_MODE_TABS.register("tab", () -> CreativeModeTab.builder()
+			.icon(() -> new ItemStack(LimbRegistry.DROWNED_LIMBS.getHead()))
+			.title(Component.translatable("itemGroup.limbs.tab"))
+			.displayItems((displayParameters, output) -> {
+				List<ItemStack> stacks = LimbRegistry.ITEMS.getEntries().stream().map(reg -> new ItemStack(reg.get())).toList();
+				output.acceptAll(stacks);
+			}).build());
 }

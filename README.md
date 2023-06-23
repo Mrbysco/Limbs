@@ -1,6 +1,5 @@
 [![build](https://github.com/Mrbysco/Limbs/actions/workflows/build.yml/badge.svg)](https://github.com/Mrbysco/Limbs/actions/workflows/build.yml) 
 [![](http://cf.way2muchnoise.eu/versions/627878.svg)](https://www.curseforge.com/minecraft/mc-mods/limbs)
-[![](https://modrinth-utils.vercel.app/api/badge/versions?id=EGCNABjL)](https://modrinth.com/mod/limbs)
 
 # Limbs #
 

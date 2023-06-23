@@ -8,10 +8,10 @@
   "mixins": [
   ],
   "client": [
-	"LivingEntityRendererAccessor",
-	"PlayerRendererAccessor"
+    "LivingEntityRendererAccessor",
+    "PlayerRendererAccessor"
   ],
   "injectors": {
-	"defaultRequire": 1
+    "defaultRequire": 1
   }
 }

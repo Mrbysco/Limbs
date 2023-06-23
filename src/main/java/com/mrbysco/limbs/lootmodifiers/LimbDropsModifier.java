@@ -50,7 +50,7 @@ public class LimbDropsModifier extends LootModifier {
 						}
 					});
 					if (Math.random() <= LimbConfig.COMMON.limbDropChance.get()) {
-						generatedLoot.add(new ItemStack(possibleLimbs.get(entity.level.random.nextInt(possibleLimbs.size()))));
+						generatedLoot.add(new ItemStack(possibleLimbs.get(entity.level().random.nextInt(possibleLimbs.size()))));
 					}
 				}
 			}
