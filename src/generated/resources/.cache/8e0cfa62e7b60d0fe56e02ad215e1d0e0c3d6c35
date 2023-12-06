@@ -1,3 +1,3 @@
-// 1.20.1	2023-06-23T22:31:00.4851752	Global Loot Modifiers : limbs
-96f0a2b4d7aefa0065da5e35927d607554ed786a data/forge/loot_modifiers/global_loot_modifiers.json
+// 1.20.2	2023-12-06T20:36:22.0135837	Global Loot Modifiers : limbs
 9f56aa05bb07401055ed775594a6f8244930d14a data/limbs/loot_modifiers/limb_drops.json
+96f0a2b4d7aefa0065da5e35927d607554ed786a data/neoforge/loot_modifiers/global_loot_modifiers.json

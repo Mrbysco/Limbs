@@ -1,6 +1,6 @@
 package com.mrbysco.limbs.registry.helper;
 
-import com.mrbysco.limbs.Reference;
+import com.mrbysco.limbs.Limbs;
 import com.mrbysco.limbs.item.PartItem;
 import com.mrbysco.limbs.item.PartLocation;
 import com.mrbysco.limbs.registry.LimbRegistry;
@@ -9,43 +9,43 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredItem;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
 public class LimbRegHelper {
 	protected final String name;
-	protected final RegistryObject<Item> HEAD;
-	protected final RegistryObject<Item> TORSO;
-	protected final RegistryObject<Item> LEFT_ARM;
-	protected final RegistryObject<Item> RIGHT_ARM;
-	protected final RegistryObject<Item> LEFT_LEG;
-	protected final RegistryObject<Item> RIGHT_LEG;
+	protected final DeferredItem<PartItem> HEAD;
+	protected final DeferredItem<PartItem> TORSO;
+	protected final DeferredItem<PartItem> LEFT_ARM;
+	protected final DeferredItem<PartItem> RIGHT_ARM;
+	protected final DeferredItem<PartItem> LEFT_LEG;
+	protected final DeferredItem<PartItem> RIGHT_LEG;
 	protected Supplier<EntityType<?>> ENTITY_TYPE;
 	protected TagKey<Item> LIMBS_TAG;
 
-	public Item getHead() {
+	public PartItem getHead() {
 		return HEAD.get();
 	}
 
-	public Item getTorso() {
+	public PartItem getTorso() {
 		return TORSO.get();
 	}
 
-	public Item getLeftArm() {
+	public PartItem getLeftArm() {
 		return LEFT_ARM.get();
 	}
 
-	public Item getRightArm() {
+	public PartItem getRightArm() {
 		return RIGHT_ARM.get();
 	}
 
-	public Item getLeftLeg() {
+	public PartItem getLeftLeg() {
 		return LEFT_LEG.get();
 	}
 
-	public Item getRightLeg() {
+	public PartItem getRightLeg() {
 		return RIGHT_LEG.get();
 	}
 
@@ -66,18 +66,18 @@ public class LimbRegHelper {
 		this.name = mobName;
 		this.ENTITY_TYPE = typeSupplier;
 		HEAD = LimbRegistry.ITEMS.register(mobName + "_head", () -> new PartItem(new Item.Properties(),
-				PartLocation.HEAD, new ResourceLocation(Reference.MOD_ID, mobName + "_head")));
+				PartLocation.HEAD, new ResourceLocation(Limbs.MOD_ID, mobName + "_head")));
 		TORSO = LimbRegistry.ITEMS.register(mobName + "_torso", () -> new PartItem(new Item.Properties(),
-				PartLocation.TORSO, new ResourceLocation(Reference.MOD_ID, mobName + "_torso")));
+				PartLocation.TORSO, new ResourceLocation(Limbs.MOD_ID, mobName + "_torso")));
 		LEFT_ARM = LimbRegistry.ITEMS.register(mobName + "_left_arm", () -> new PartItem(new Item.Properties(),
-				PartLocation.LEFT_ARM, new ResourceLocation(Reference.MOD_ID, mobName + "_left_arm")));
+				PartLocation.LEFT_ARM, new ResourceLocation(Limbs.MOD_ID, mobName + "_left_arm")));
 		RIGHT_ARM = LimbRegistry.ITEMS.register(mobName + "_right_arm", () -> new PartItem(new Item.Properties(),
-				PartLocation.RIGHT_ARM, new ResourceLocation(Reference.MOD_ID, mobName + "_right_arm")));
+				PartLocation.RIGHT_ARM, new ResourceLocation(Limbs.MOD_ID, mobName + "_right_arm")));
 		LEFT_LEG = LimbRegistry.ITEMS.register(mobName + "_left_leg", () -> new PartItem(new Item.Properties(),
-				PartLocation.LEFT_LEG, new ResourceLocation(Reference.MOD_ID, mobName + "_left_leg")));
+				PartLocation.LEFT_LEG, new ResourceLocation(Limbs.MOD_ID, mobName + "_left_leg")));
 		RIGHT_LEG = LimbRegistry.ITEMS.register(mobName + "_right_leg", () -> new PartItem(new Item.Properties(),
-				PartLocation.RIGHT_LEG, new ResourceLocation(Reference.MOD_ID, mobName + "_right_leg")));
+				PartLocation.RIGHT_LEG, new ResourceLocation(Limbs.MOD_ID, mobName + "_right_leg")));
 
-		LIMBS_TAG = ItemTags.create(new ResourceLocation(Reference.MOD_ID, name + "_limbs"));
+		LIMBS_TAG = ItemTags.create(new ResourceLocation(Limbs.MOD_ID, name + "_limbs"));
 	}
 }

@@ -1,6 +1,6 @@
 package com.mrbysco.limbs.datagen;
 
-import com.mrbysco.limbs.Reference;
+import com.mrbysco.limbs.Limbs;
 import com.mrbysco.limbs.lootmodifiers.LimbDropsModifier;
 import com.mrbysco.limbs.registry.LimbRegistry;
 import com.mrbysco.limbs.registry.helper.LimbRegHelper;
@@ -22,16 +22,16 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
-import net.minecraftforge.client.model.generators.ItemModelProvider;
-import net.minecraftforge.client.model.generators.ModelFile.UncheckedModelFile;
-import net.minecraftforge.common.data.BlockTagsProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.GlobalLootModifierProvider;
-import net.minecraftforge.common.data.LanguageProvider;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile.UncheckedModelFile;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
@@ -60,7 +60,7 @@ public class LimbDataGen {
 
 	private static class Language extends LanguageProvider {
 		public Language(PackOutput packOutput) {
-			super(packOutput, Reference.MOD_ID, "en_us");
+			super(packOutput, Limbs.MOD_ID, "en_us");
 		}
 
 		@Override
@@ -147,12 +147,12 @@ public class LimbDataGen {
 
 	private static class ItemModels extends ItemModelProvider {
 		public ItemModels(PackOutput packOutput, ExistingFileHelper helper) {
-			super(packOutput, Reference.MOD_ID, helper);
+			super(packOutput, Limbs.MOD_ID, helper);
 		}
 
 		@Override
 		protected void registerModels() {
-			for (RegistryObject<Item> limbObject : LimbRegistry.ITEMS.getEntries()) {
+			for (DeferredHolder<Item, ? extends Item> limbObject : LimbRegistry.ITEMS.getEntries()) {
 				makeLimb(limbObject.getId());
 			}
 		}
@@ -178,7 +178,7 @@ public class LimbDataGen {
 	public static class LimbBlockTags extends BlockTagsProvider {
 
 		public LimbBlockTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper helper) {
-			super(output, lookupProvider, Reference.MOD_ID, helper);
+			super(output, lookupProvider, Limbs.MOD_ID, helper);
 		}
 
 		@Override
@@ -190,7 +190,7 @@ public class LimbDataGen {
 	public static class LimbItemTags extends ItemTagsProvider {
 
 		public LimbItemTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagLookup<Block>> blockTagProvider, ExistingFileHelper helper) {
-			super(packOutput, lookupProvider, blockTagProvider, Reference.MOD_ID, helper);
+			super(packOutput, lookupProvider, blockTagProvider, Limbs.MOD_ID, helper);
 		}
 
 		@Override
@@ -222,10 +222,10 @@ public class LimbDataGen {
 	}
 
 	public static class LimbEntityTags extends EntityTypeTagsProvider {
-		public static final TagKey<EntityType<?>> LIMB_ABLE = create(new ResourceLocation(Reference.MOD_ID, "limb_able"));
+		public static final TagKey<EntityType<?>> LIMB_ABLE = create(new ResourceLocation(Limbs.MOD_ID, "limb_able"));
 
 		public LimbEntityTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
-			super(packOutput, lookupProvider, Reference.MOD_ID, existingFileHelper);
+			super(packOutput, lookupProvider, Limbs.MOD_ID, existingFileHelper);
 		}
 
 		@Override
@@ -241,7 +241,7 @@ public class LimbDataGen {
 
 	public static class LimbLootProvider extends GlobalLootModifierProvider {
 		public LimbLootProvider(PackOutput packOutput) {
-			super(packOutput, Reference.MOD_ID);
+			super(packOutput, Limbs.MOD_ID);
 		}
 
 		@Override

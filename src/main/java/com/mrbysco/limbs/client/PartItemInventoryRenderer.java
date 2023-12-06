@@ -26,7 +26,7 @@ public class PartItemInventoryRenderer extends BlockEntityWithoutLevelRenderer {
 	public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
 		if (stack.getItem() instanceof PartItem partItem) {
 			final ResourceLocation partRegistry = partItem.getPartRegistry();
-			BodyPartType partType = BodyPartRegistry.BODY_PARTS.get().getValue(partRegistry);
+			BodyPartType partType = BodyPartRegistry.BODY_PARTS.get(partRegistry);
 			if (partType != null) {
 				poseStack.pushPose();
 				final ModelPart bodyPart = partType.getInventoryPart();

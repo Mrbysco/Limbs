@@ -1,26 +1,23 @@
 package com.mrbysco.limbs.client.bodypart;
 
+import com.google.common.base.Suppliers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.LazyLoadedValue;
-import net.minecraftforge.fml.DistExecutor;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class BodyPartType {
-	private final LazyLoadedValue<ModelPart> inventoryPart;
-	private final LazyLoadedValue<ModelPart> bodyPart;
+	private final Supplier<ModelPart> inventoryPart;
+	private final Supplier<ModelPart> bodyPart;
 	private final ResourceLocation texture;
 	@Nullable
 	private final ResourceLocation secondTexture;
 
-	public BodyPartType(Supplier<ModelPart> partSupplier, ResourceLocation texture, ResourceLocation texture2) {
+	public BodyPartType(Supplier<ModelPart> partSupplier, ResourceLocation texture, @Nullable ResourceLocation texture2) {
 		this.texture = texture;
-		this.inventoryPart = DistExecutor.unsafeRunForDist(() -> () -> new LazyLoadedValue<>(() -> partSupplier.get()),
-				() -> () -> null);
-		this.bodyPart = DistExecutor.unsafeRunForDist(() -> () -> new LazyLoadedValue<>(() -> partSupplier.get()),
-				() -> () -> null);
+		this.inventoryPart = Suppliers.memoize(partSupplier::get);
+		this.bodyPart = Suppliers.memoize(partSupplier::get);
 		this.secondTexture = texture2;
 	}
 

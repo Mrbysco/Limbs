@@ -2,7 +2,7 @@ package com.mrbysco.limbs.item;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.function.Consumer;

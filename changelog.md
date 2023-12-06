@@ -1,1 +1,1 @@
-* Fix the mixins not being loaded
+* Initial update to 1.20.2 (NeoForge)

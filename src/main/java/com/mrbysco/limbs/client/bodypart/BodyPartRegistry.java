@@ -1,25 +1,21 @@
 package com.mrbysco.limbs.client.bodypart;
 
-import com.mrbysco.limbs.Reference;
+import com.mrbysco.limbs.Limbs;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.NewRegistryEvent;
-import net.minecraftforge.registries.RegistryBuilder;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegistryBuilder;
 
-import java.util.function.Supplier;
-
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Reference.MOD_ID)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Limbs.MOD_ID)
 public class BodyPartRegistry {
-	public static final ResourceLocation registryLocation = new ResourceLocation(Reference.MOD_ID, "body_parts");
-	public static Supplier<IForgeRegistry<BodyPartType>> BODY_PARTS;
+	public static final ResourceKey<Registry<BodyPartType>> BODY_PARTS_KEY = ResourceKey.createRegistryKey(new ResourceLocation(Limbs.MOD_ID, "body_parts"));
+	public static final Registry<BodyPartType> BODY_PARTS = (new RegistryBuilder<>(BodyPartRegistry.BODY_PARTS_KEY)).create();
 
 	@SubscribeEvent
 	public static void onNewRegistry(NewRegistryEvent event) {
-		RegistryBuilder<BodyPartType> registryBuilder = new RegistryBuilder<>();
-		registryBuilder.setName(registryLocation);
-		registryBuilder.disableSaving();
-		BODY_PARTS = event.create(registryBuilder);
+		event.register(BODY_PARTS);
 	}
 }
