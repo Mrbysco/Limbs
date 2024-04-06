@@ -10,7 +10,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.LogManager;
@@ -21,8 +20,7 @@ public class Limbs {
 	public static final String MOD_ID = "limbs";
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public Limbs() {
-		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+	public Limbs(IEventBus eventBus) {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, LimbConfig.commonSpec);
 
 		LimbRegistry.ITEMS.register(eventBus);

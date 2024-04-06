@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.AbstractSkullBlock;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RenderArmEvent;
 import net.neoforged.neoforge.client.event.RenderPlayerEvent;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
@@ -50,7 +49,7 @@ public class ClientHandler {
 	public static void onRenderArm(RenderArmEvent event) {
 		final AbstractClientPlayer player = event.getPlayer();
 
-		LazyOptional<ICuriosItemHandler> curioInv = CuriosApi.getCuriosInventory(player);
+		Optional<ICuriosItemHandler> curioInv = CuriosApi.getCuriosInventory(player);
 		curioInv.ifPresent(inv -> {
 			Optional<SlotResult> firstCurio = inv.findFirstCurio((stack) -> stack.getItem() instanceof PartItem part &&
 					part.getPartLocation().isArm() && part.getPartLocation().getHumanoidArm() == event.getArm());
@@ -96,7 +95,7 @@ public class ClientHandler {
 		final PlayerRenderer playerRenderer = event.getRenderer();
 		PlayerModel<?> playerModel = playerRenderer.getModel();
 
-		LazyOptional<ICuriosItemHandler> curioInv = CuriosApi.getCuriosInventory(player);
+		Optional<ICuriosItemHandler> curioInv = CuriosApi.getCuriosInventory(player);
 		curioInv.ifPresent(inv -> {
 			List<SlotResult> slotResults = inv.findCurios(stack -> stack.getItem() instanceof PartItem ||
 					(stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof AbstractSkullBlock));
@@ -148,7 +147,7 @@ public class ClientHandler {
 		PlayerModel<?> playerModel = playerRenderer.getModel();
 
 
-		LazyOptional<ICuriosItemHandler> curioInv = CuriosApi.getCuriosInventory(player);
+		Optional<ICuriosItemHandler> curioInv = CuriosApi.getCuriosInventory(player);
 		curioInv.ifPresent(inv -> {
 			final List<SlotResult> slotResults = inv.findCurios(stack -> stack.getItem() instanceof PartItem ||
 					(stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof AbstractSkullBlock));
