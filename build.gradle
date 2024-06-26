@@ -169,7 +169,7 @@ if (System.getenv().MODRINTH_KEY) {
 
         dependencies {
             required.project "curios"
-            optional.project "fivehead"
+            optional.project "5head"
         }
     }
 }
