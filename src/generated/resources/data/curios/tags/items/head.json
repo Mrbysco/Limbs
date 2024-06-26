@@ -1,6 +1,9 @@
 {
   "values": [
-    "#forge:heads",
+    {
+      "id": "#c:skulls",
+      "required": false
+    },
     "limbs:skeleton_head",
     "limbs:stray_head",
     "limbs:wither_skeleton_head",

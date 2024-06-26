@@ -6,7 +6,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 public class LimbTags {
-	public static final TagKey<Item> HEADS = ItemTags.create(new ResourceLocation("forge", "heads"));
+	public static final TagKey<Item> SKULLS = ItemTags.create(new ResourceLocation("c", "skulls"));
 	public static final TagKey<Item> HEAD = ItemTags.create(new ResourceLocation("curios", "head"));
 	public static final TagKey<Item> TORSO = ItemTags.create(new ResourceLocation("curios", "torso"));
 	public static final TagKey<Item> LEFT_ARM = ItemTags.create(new ResourceLocation("curios", "left_arm"));

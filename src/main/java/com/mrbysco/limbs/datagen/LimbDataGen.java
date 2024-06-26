@@ -23,7 +23,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile.UncheckedModelFile;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
@@ -36,7 +36,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class LimbDataGen {
 	@SubscribeEvent
 	public static void gatherData(GatherDataEvent event) {
@@ -50,7 +50,7 @@ public class LimbDataGen {
 			generator.addProvider(event.includeServer(), limbBlockTagProvider = new LimbBlockTags(packOutput, lookupProvider, helper));
 			generator.addProvider(event.includeServer(), new LimbItemTags(packOutput, lookupProvider, limbBlockTagProvider.contentsGetter(), helper));
 			generator.addProvider(event.includeServer(), new LimbEntityTags(packOutput, lookupProvider, helper));
-			generator.addProvider(event.includeServer(), new LimbLootProvider(packOutput));
+			generator.addProvider(event.includeServer(), new LimbLootProvider(packOutput, lookupProvider));
 		}
 		if (event.includeClient()) {
 			generator.addProvider(event.includeClient(), new Language(packOutput));
@@ -195,7 +195,7 @@ public class LimbDataGen {
 
 		@Override
 		protected void addTags(HolderLookup.Provider provider) {
-			this.tag(LimbTags.HEAD).addTag(LimbTags.HEADS);
+			this.tag(LimbTags.HEAD).addOptionalTag(LimbTags.SKULLS);
 
 			makeLimbTags(LimbRegistry.SKELETON_LIMBS);
 			makeLimbTags(LimbRegistry.STRAY_LIMBS);
@@ -240,8 +240,8 @@ public class LimbDataGen {
 	}
 
 	public static class LimbLootProvider extends GlobalLootModifierProvider {
-		public LimbLootProvider(PackOutput packOutput) {
-			super(packOutput, Limbs.MOD_ID);
+		public LimbLootProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+			super(packOutput, lookupProvider, Limbs.MOD_ID);
 		}
 
 		@Override

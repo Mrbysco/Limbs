@@ -164,7 +164,7 @@ public class ClientHandler {
 							poseStack.pushPose();
 
 							if (player instanceof AbstractClientPlayer clientPlayer) {
-								setupRotation(poseStack, clientPlayer, playerRenderer, event.getPartialTick());
+								setupRotation(poseStack, clientPlayer, playerRenderer, event.getPartialTick(), event.getEntity().getScale());
 							}
 
 							final ModelPart bodyPart = partType.getBodyPart();
@@ -196,7 +196,7 @@ public class ClientHandler {
 		});
 	}
 
-	protected static void setupRotation(PoseStack poseStack, AbstractClientPlayer player, PlayerRenderer playerRenderer, float partialTicks) {
+	protected static void setupRotation(PoseStack poseStack, AbstractClientPlayer player, PlayerRenderer playerRenderer, float partialTicks, float scale) {
 		boolean shouldSit = player.isPassenger() && (player.getVehicle() != null && player.getVehicle().shouldRiderSit());
 		float f = Mth.rotLerp(partialTicks, player.yBodyRotO, player.yBodyRot);
 		float f1 = Mth.rotLerp(partialTicks, player.yHeadRotO, player.yHeadRot);
@@ -220,6 +220,6 @@ public class ClientHandler {
 
 
 		float f7 = ((LivingEntityRendererAccessor) playerRenderer).limbs_getBob(player, partialTicks);
-		((PlayerRendererAccessor) playerRenderer).limbs_setupRotations(player, poseStack, f7, f, partialTicks);
+		((PlayerRendererAccessor) playerRenderer).limbs_setupRotations(player, poseStack, f7, f, partialTicks, scale);
 	}
 }

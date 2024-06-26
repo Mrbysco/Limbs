@@ -3,10 +3,12 @@ package com.mrbysco.limbs.lootmodifiers;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mrbysco.limbs.config.LimbConfig;
 import com.mrbysco.limbs.item.PartItem;
 import com.mrbysco.limbs.item.PartLocation;
+import com.mrbysco.limbs.registry.LimbLootModifiers;
 import com.mrbysco.limbs.registry.LimbRegistry;
 import com.mrbysco.limbs.registry.helper.LimbRegHelper;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -28,8 +30,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class LimbDropsModifier extends LootModifier {
-	public static final Supplier<Codec<LimbDropsModifier>> CODEC = Suppliers.memoize(() ->
-			RecordCodecBuilder.create(inst -> codecStart(inst).apply(inst, LimbDropsModifier::new)));
+	public static final Supplier<MapCodec<LimbDropsModifier>> CODEC = Suppliers.memoize(() ->
+			RecordCodecBuilder.mapCodec(inst -> codecStart(inst).apply(inst, LimbDropsModifier::new)));
 
 	public LimbDropsModifier(LootItemCondition[] conditionsIn) {
 		super(conditionsIn);
@@ -66,7 +68,7 @@ public class LimbDropsModifier extends LootModifier {
 	}
 
 	@Override
-	public Codec<? extends IGlobalLootModifier> codec() {
-		return CODEC.get();
+	public MapCodec<? extends IGlobalLootModifier> codec() {
+		return LimbLootModifiers.LIMB_DROPS.get();
 	}
 }
