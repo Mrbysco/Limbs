@@ -11,7 +11,7 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = Limbs.MOD_ID)
 public class BodyPartRegistry {
-	public static final ResourceKey<Registry<BodyPartType>> BODY_PARTS_KEY = ResourceKey.createRegistryKey(new ResourceLocation(Limbs.MOD_ID, "body_parts"));
+	public static final ResourceKey<Registry<BodyPartType>> BODY_PARTS_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(Limbs.MOD_ID, "body_parts"));
 	public static final Registry<BodyPartType> BODY_PARTS = (new RegistryBuilder<>(BodyPartRegistry.BODY_PARTS_KEY)).create();
 
 	@SubscribeEvent

@@ -66,18 +66,18 @@ public class LimbRegHelper {
 		this.name = mobName;
 		this.ENTITY_TYPE = typeSupplier;
 		HEAD = LimbRegistry.ITEMS.register(mobName + "_head", () -> new PartItem(new Item.Properties(),
-				PartLocation.HEAD, new ResourceLocation(Limbs.MOD_ID, mobName + "_head")));
+				PartLocation.HEAD, ResourceLocation.fromNamespaceAndPath(Limbs.MOD_ID, mobName + "_head")));
 		TORSO = LimbRegistry.ITEMS.register(mobName + "_torso", () -> new PartItem(new Item.Properties(),
-				PartLocation.TORSO, new ResourceLocation(Limbs.MOD_ID, mobName + "_torso")));
+				PartLocation.TORSO, ResourceLocation.fromNamespaceAndPath(Limbs.MOD_ID, mobName + "_torso")));
 		LEFT_ARM = LimbRegistry.ITEMS.register(mobName + "_left_arm", () -> new PartItem(new Item.Properties(),
-				PartLocation.LEFT_ARM, new ResourceLocation(Limbs.MOD_ID, mobName + "_left_arm")));
+				PartLocation.LEFT_ARM, ResourceLocation.fromNamespaceAndPath(Limbs.MOD_ID, mobName + "_left_arm")));
 		RIGHT_ARM = LimbRegistry.ITEMS.register(mobName + "_right_arm", () -> new PartItem(new Item.Properties(),
-				PartLocation.RIGHT_ARM, new ResourceLocation(Limbs.MOD_ID, mobName + "_right_arm")));
+				PartLocation.RIGHT_ARM, ResourceLocation.fromNamespaceAndPath(Limbs.MOD_ID, mobName + "_right_arm")));
 		LEFT_LEG = LimbRegistry.ITEMS.register(mobName + "_left_leg", () -> new PartItem(new Item.Properties(),
-				PartLocation.LEFT_LEG, new ResourceLocation(Limbs.MOD_ID, mobName + "_left_leg")));
+				PartLocation.LEFT_LEG, ResourceLocation.fromNamespaceAndPath(Limbs.MOD_ID, mobName + "_left_leg")));
 		RIGHT_LEG = LimbRegistry.ITEMS.register(mobName + "_right_leg", () -> new PartItem(new Item.Properties(),
-				PartLocation.RIGHT_LEG, new ResourceLocation(Limbs.MOD_ID, mobName + "_right_leg")));
+				PartLocation.RIGHT_LEG, ResourceLocation.fromNamespaceAndPath(Limbs.MOD_ID, mobName + "_right_leg")));
 
-		LIMBS_TAG = ItemTags.create(new ResourceLocation(Limbs.MOD_ID, name + "_limbs"));
+		LIMBS_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Limbs.MOD_ID, "limbs/" + name));
 	}
 }

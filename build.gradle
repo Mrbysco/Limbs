@@ -73,10 +73,8 @@ repositories {
         }
     }
     maven {
-        url = "https://maven.theillusivec4.top/"
-        content {
-            includeGroup "top.theillusivec4.curios"
-        }
+        name = "Curios Continuation - OctoStudios"
+        url = uri("https://maven.octo-studios.com/releases")
     }
     maven {
         url = "https://cursemaven.com"
@@ -169,7 +167,7 @@ if (System.getenv().MODRINTH_KEY) {
 
         dependencies {
             required.project "curios"
-            optional.project "fivehead"
+            optional.project "5head"
         }
     }
 }

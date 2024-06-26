@@ -6,11 +6,11 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 public class LimbTags {
-	public static final TagKey<Item> SKULLS = ItemTags.create(new ResourceLocation("c", "skulls"));
-	public static final TagKey<Item> HEAD = ItemTags.create(new ResourceLocation("curios", "head"));
-	public static final TagKey<Item> TORSO = ItemTags.create(new ResourceLocation("curios", "torso"));
-	public static final TagKey<Item> LEFT_ARM = ItemTags.create(new ResourceLocation("curios", "left_arm"));
-	public static final TagKey<Item> RIGHT_ARM = ItemTags.create(new ResourceLocation("curios", "right_arm"));
-	public static final TagKey<Item> LEFT_LEG = ItemTags.create(new ResourceLocation("curios", "left_leg"));
-	public static final TagKey<Item> RIGHT_LEG = ItemTags.create(new ResourceLocation("curios", "right_leg"));
+	public static final TagKey<Item> SKULLS = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "skulls"));
+	public static final TagKey<Item> HEAD = ItemTags.create(ResourceLocation.fromNamespaceAndPath("curios", "head"));
+	public static final TagKey<Item> TORSO = ItemTags.create(ResourceLocation.fromNamespaceAndPath("curios", "torso"));
+	public static final TagKey<Item> LEFT_ARM = ItemTags.create(ResourceLocation.fromNamespaceAndPath("curios", "left_arm"));
+	public static final TagKey<Item> RIGHT_ARM = ItemTags.create(ResourceLocation.fromNamespaceAndPath("curios", "right_arm"));
+	public static final TagKey<Item> LEFT_LEG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("curios", "left_leg"));
+	public static final TagKey<Item> RIGHT_LEG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("curios", "right_leg"));
 }

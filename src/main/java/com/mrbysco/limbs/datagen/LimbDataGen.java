@@ -222,7 +222,7 @@ public class LimbDataGen {
 	}
 
 	public static class LimbEntityTags extends EntityTypeTagsProvider {
-		public static final TagKey<EntityType<?>> LIMB_ABLE = create(new ResourceLocation(Limbs.MOD_ID, "limb_able"));
+		public static final TagKey<EntityType<?>> LIMB_ABLE = create(ResourceLocation.fromNamespaceAndPath(Limbs.MOD_ID, "limb_able"));
 
 		public LimbEntityTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
 			super(packOutput, lookupProvider, Limbs.MOD_ID, existingFileHelper);
