@@ -13,6 +13,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -195,7 +196,7 @@ public class LimbDataGen {
 
 		@Override
 		protected void addTags(HolderLookup.Provider provider) {
-			this.tag(LimbTags.HEAD).addOptionalTag(LimbTags.SKULLS);
+			this.tag(LimbTags.HEAD).addOptionalTag(ItemTags.SKULLS);
 
 			makeLimbTags(LimbRegistry.SKELETON_LIMBS);
 			makeLimbTags(LimbRegistry.STRAY_LIMBS);

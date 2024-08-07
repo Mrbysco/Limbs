@@ -1,7 +1,7 @@
 {
   "values": [
     {
-      "id": "#c:skulls",
+      "id": "#minecraft:skulls",
       "required": false
     },
     "limbs:skeleton_head",
