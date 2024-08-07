@@ -1,6 +1,7 @@
 package com.mrbysco.limbs.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.mrbysco.limbs.client.bodypart.BodyPartRegistry;
 import com.mrbysco.limbs.client.bodypart.BodyPartType;
@@ -8,9 +9,12 @@ import com.mrbysco.limbs.item.PartItem;
 import com.mrbysco.limbs.item.PartLocation;
 import com.mrbysco.limbs.mixin.LivingEntityRendererAccessor;
 import com.mrbysco.limbs.mixin.PlayerRendererAccessor;
+import com.mrbysco.limbs.registry.LimbRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -28,6 +32,8 @@ import net.minecraft.world.level.block.AbstractSkullBlock;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RenderArmEvent;
 import net.neoforged.neoforge.client.event.RenderPlayerEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
@@ -37,6 +43,24 @@ import java.util.List;
 import java.util.Optional;
 
 public class ClientHandler {
+	public static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
+		LimbRegistry.ITEMS.getEntries().stream().filter(entry -> entry.get() instanceof PartItem).forEach(deferredHolder -> {
+			event.registerItem(new IClientItemExtensions() {
+
+				@Override
+				public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+					return new PartItemInventoryRenderer(new net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context(
+							Minecraft.getInstance().getBlockEntityRenderDispatcher(),
+							Minecraft.getInstance().getBlockRenderer(),
+							Minecraft.getInstance().getItemRenderer(),
+							Minecraft.getInstance().getEntityRenderDispatcher(),
+							Minecraft.getInstance().getEntityModels(),
+							Minecraft.getInstance().font
+					));
+				}
+			}, deferredHolder.get());
+		});
+	}
 
 	public static void onClientSetup(FMLClientSetupEvent event) {
 		for (Item item : BuiltInRegistries.ITEM.stream().toList()) {
@@ -65,21 +89,25 @@ public class ClientHandler {
 						poseStack.pushPose();
 						final ModelPart bodyPart = partType.getBodyPart();
 						final PartLocation partLocation = partItem.getPartLocation();
-						final int i = OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(false));
+						final int packedOverlay = OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(false));
 
 						if (event.getArm() == HumanoidArm.RIGHT && partLocation == PartLocation.RIGHT_ARM) {
-							bodyPart.render(poseStack, event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getTexture())), event.getPackedLight(), i);
+							VertexConsumer buffer = event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getTexture()));
+							bodyPart.render(poseStack, buffer, event.getPackedLight(), packedOverlay);
 							if (partType.getSecondTexture() != null) {
+								VertexConsumer buffer1 = event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getSecondTexture()));
 								poseStack.scale(1.001F, 1.001F, 1.001F);
-								bodyPart.render(poseStack, event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getSecondTexture())), event.getPackedLight(), i);
+								bodyPart.render(poseStack, buffer1, event.getPackedLight(), packedOverlay);
 							}
 							event.setCanceled(true);
 						} else if (event.getArm() == HumanoidArm.LEFT && partLocation == PartLocation.LEFT_ARM) {
-							bodyPart.render(poseStack, event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getTexture())), event.getPackedLight(), i);
+							VertexConsumer buffer = event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getTexture()));
+							bodyPart.render(poseStack, buffer, event.getPackedLight(), packedOverlay);
 							if (partType.getSecondTexture() != null) {
+								VertexConsumer buffer1 = event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getSecondTexture()));
 								poseStack.scale(1.01F, 1.01F, 1.01F);
 								poseStack.translate(0.001F, -0.005F, 0.001F);
-								bodyPart.render(poseStack, event.getMultiBufferSource().getBuffer(RenderType.entityTranslucent(partType.getSecondTexture())), event.getPackedLight(), i);
+								bodyPart.render(poseStack, buffer1, event.getPackedLight(), packedOverlay);
 							}
 							event.setCanceled(true);
 						}
@@ -143,9 +171,9 @@ public class ClientHandler {
 
 	public static void onPlayerRenderPost(RenderPlayerEvent.Post event) {
 		final Player player = event.getEntity();
+		final float scale = player.getScale();
 		final PlayerRenderer playerRenderer = event.getRenderer();
 		PlayerModel<?> playerModel = playerRenderer.getModel();
-
 
 		Optional<ICuriosItemHandler> curioInv = CuriosApi.getCuriosInventory(player);
 		curioInv.ifPresent(inv -> {
@@ -170,6 +198,7 @@ public class ClientHandler {
 							final ModelPart bodyPart = partType.getBodyPart();
 							final PartLocation partLocation = partItem.getPartLocation();
 							poseStack.scale(0.9375F, 0.9375F, 0.9375F);
+							poseStack.scale(scale, scale, scale);
 							poseStack.translate(0, (1f / 16) * 24, 0);
 							poseStack.scale(1, -1, -1);
 							switch (partLocation) {

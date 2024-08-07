@@ -28,6 +28,7 @@ public class Limbs {
 		LimbLootModifiers.GLM.register(eventBus);
 
 		if (dist.isClient()) {
+			eventBus.addListener(ClientHandler::onRegisterClientExtensions);
 			eventBus.addListener(ClientHandler::onClientSetup);
 			NeoForge.EVENT_BUS.addListener(ClientHandler::onRenderArm);
 			NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ClientHandler::onPlayerRenderPre);
