@@ -143,6 +143,25 @@ public class LimbDataGen {
 			this.add(LimbRegistry.PIGLIN_BRUTE_LIMBS.getRightArm(), "Piglin Brute Right Arm");
 			this.add(LimbRegistry.PIGLIN_BRUTE_LIMBS.getLeftLeg(), "Piglin Brute Left Leg");
 			this.add(LimbRegistry.PIGLIN_BRUTE_LIMBS.getRightLeg(), "Piglin Brute Right Leg");
+
+			addConfig("title", "Limbs Config", null);
+			addConfig("general", "General", "General settings");
+			addConfig("limbDropChance", "Limb Drop Chance", "The drop chance of limbs when a compatible mob is killed (Default: 0.01)");
+			addConfig("dropHeads", "Drop Heads", "If true, mobs have a chance of dropping their head [Should be disabled when using the Heads mod] (Default: true)");
+
+		}
+
+		/**
+		 * Add the translation for a config entry
+		 *
+		 * @param path        The path of the config entry
+		 * @param name        The name of the config entry
+		 * @param description The description of the config entry (optional in case of targeting "title" or similar entries that have no tooltip)
+		 */
+		private void addConfig(String path, String name, @org.jetbrains.annotations.Nullable String description) {
+			this.add("limbs.configuration." + path, name);
+			if (description != null && !description.isEmpty())
+				this.add("limbs.configuration." + path + ".tooltip", description);
 		}
 	}
 

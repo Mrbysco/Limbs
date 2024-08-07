@@ -21,6 +21,12 @@ versionRange="[1.21,1.22)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.limbs]]
+modId="neoforge"
+type="REQUIRED"
+versionRange="[21.0.110-beta,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.limbs]]
 modId="curios"
 type="REQUIRED"
 versionRange="[9.0.3+1.21,]"

@@ -64,5 +64,12 @@
   "item.limbs.zombified_piglin_right_arm": "Zombified Piglin Right Arm",
   "item.limbs.zombified_piglin_right_leg": "Zombified Piglin Right Leg",
   "item.limbs.zombified_piglin_torso": "Zombified Piglin Torso",
-  "itemGroup.limbs.tab": "Limbs"
+  "itemGroup.limbs.tab": "Limbs",
+  "limbs.configuration.dropHeads": "Drop Heads",
+  "limbs.configuration.dropHeads.tooltip": "If true, mobs have a chance of dropping their head [Should be disabled when using the Heads mod] (Default: true)",
+  "limbs.configuration.general": "General",
+  "limbs.configuration.general.tooltip": "General settings",
+  "limbs.configuration.limbDropChance": "Limb Drop Chance",
+  "limbs.configuration.limbDropChance.tooltip": "The drop chance of limbs when a compatible mob is killed (Default: 0.01)",
+  "limbs.configuration.title": "Limbs Config"
 }
