@@ -1,1 +1,2 @@
-* Initial update to 1.21
+* Apply entity scale when rendering custom body parts
+* Enable in-game config
