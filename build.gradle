@@ -43,6 +43,8 @@ minecraft {
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', "${mod_id}"
 
+            jvmArgs("-Xmx4G")
+
             mods {
                 "${mod_id}" {
                     source sourceSets.main
@@ -64,6 +66,9 @@ minecraft {
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', "${mod_id}"
+
+            jvmArgs("-Xmx4G")
+
 
             mods {
                 "${mod_id}" {
@@ -89,6 +94,8 @@ minecraft {
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', "${mod_id}"
+
+            jvmArgs("-Xmx4G")
 
             mods {
                 "${mod_id}" {
