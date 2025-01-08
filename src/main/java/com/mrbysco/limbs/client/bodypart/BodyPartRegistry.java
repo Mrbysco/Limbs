@@ -20,6 +20,7 @@ public class BodyPartRegistry {
 		RegistryBuilder<BodyPartType> registryBuilder = new RegistryBuilder<>();
 		registryBuilder.setName(registryLocation);
 		registryBuilder.disableSaving();
+		registryBuilder.disableSync();
 		BODY_PARTS = event.create(registryBuilder);
 	}
 }
