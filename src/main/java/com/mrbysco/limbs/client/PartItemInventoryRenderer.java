@@ -16,8 +16,14 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 public class PartItemInventoryRenderer extends BlockEntityWithoutLevelRenderer {
+	private ModelPart bodyPart;
+	private ResourceLocation texture;
+	@Nullable
+	private ResourceLocation secondTexture;
+
 	public PartItemInventoryRenderer(BlockEntityRendererProvider.Context context) {
 		super(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
 	}
@@ -26,17 +32,23 @@ public class PartItemInventoryRenderer extends BlockEntityWithoutLevelRenderer {
 	public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
 		if (stack.getItem() instanceof PartItem partItem) {
 			final ResourceLocation partRegistry = partItem.getPartRegistry();
-			BodyPartType partType = BodyPartRegistry.BODY_PARTS.get(partRegistry);
-			if (partType != null) {
+			if (this.bodyPart == null || this.texture == null) {
+				BodyPartType type = BodyPartRegistry.BODY_PARTS.get(partRegistry);
+				if (type != null) {
+					this.bodyPart = type.getInventoryPart();
+					this.texture = type.getTexture();
+					this.secondTexture = type.getSecondTexture();
+				}
+			}
+			if (this.bodyPart != null) {
 				poseStack.pushPose();
-				final ModelPart bodyPart = partType.getInventoryPart();
 				final PartLocation partLocation = partItem.getPartLocation();
-				bodyPart.x = 0;
-				bodyPart.y = 6;
-				bodyPart.z = 0;
-				bodyPart.xRot = 0;
-				bodyPart.yRot = 0;
-				bodyPart.zRot = 0;
+				this.bodyPart.x = 0;
+				this.bodyPart.y = 6;
+				this.bodyPart.z = 0;
+				this.bodyPart.xRot = 0;
+				this.bodyPart.yRot = 0;
+				this.bodyPart.zRot = 0;
 				poseStack.translate(1, 0, 0);
 				switch (partLocation) {
 					case HEAD -> {
@@ -54,11 +66,11 @@ public class PartItemInventoryRenderer extends BlockEntityWithoutLevelRenderer {
 				}
 				poseStack.mulPose(Axis.ZN.rotationDegrees(180F));
 				poseStack.mulPose(Axis.YN.rotationDegrees(180F));
-				bodyPart.render(poseStack, bufferSource.getBuffer(RenderType.entityTranslucent(partType.getTexture())), combinedLight, combinedOverlay);
-				if (partType.getSecondTexture() != null) {
+				this.bodyPart.render(poseStack, bufferSource.getBuffer(RenderType.entityTranslucent(this.texture)), combinedLight, combinedOverlay);
+				if (this.secondTexture != null) {
 					poseStack.scale(1.01F, 1.01F, 1.01F);
 					poseStack.translate(0.001F, -0.005F, 0.001F);
-					bodyPart.render(poseStack, bufferSource.getBuffer(RenderType.entityTranslucent(partType.getSecondTexture())), combinedLight, combinedOverlay);
+					this.bodyPart.render(poseStack, bufferSource.getBuffer(RenderType.entityTranslucent(this.secondTexture)), combinedLight, combinedOverlay);
 				}
 				poseStack.popPose();
 			}
