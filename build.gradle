@@ -102,7 +102,9 @@ dependencies {
 
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 
+    compileOnly "com.mrbysco.heads:Heads-${heads_version}"
     localRuntime "com.mrbysco.heads:Heads-${heads_version}"
+    compileOnly "com.mrbysco.fivehead:FiveHead-${fivehead_version}"
     localRuntime "com.mrbysco.fivehead:FiveHead-${fivehead_version}"
 }
 
