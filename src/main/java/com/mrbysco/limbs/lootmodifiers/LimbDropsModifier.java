@@ -32,20 +32,20 @@ public class LimbDropsModifier extends LootModifier {
 	public static final Supplier<MapCodec<LimbDropsModifier>> CODEC = Suppliers.memoize(() ->
 			RecordCodecBuilder.mapCodec(inst -> codecStart(inst).apply(inst, LimbDropsModifier::new)));
 
-	public LimbDropsModifier(LootItemCondition[] conditionsIn) {
-		super(conditionsIn);
+	public LimbDropsModifier(LootItemCondition[] lootConditions, int priority) {
+		super(lootConditions, priority);
 	}
 
 	@Nonnull
 	@Override
 	protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-		if (context.hasParam(LootContextParams.THIS_ENTITY)) {
-			Entity entity = context.getParam(LootContextParams.THIS_ENTITY);
+		if (context.hasParameter(LootContextParams.THIS_ENTITY)) {
+			Entity entity = context.getParameter(LootContextParams.THIS_ENTITY);
 			EntityType<?> type = entity.getType();
 			for (LimbRegHelper limbRegHelper : LimbRegistry.REGISTERED_LIMBS) {
 				if (limbRegHelper.getEntityType() != null && BuiltInRegistries.ENTITY_TYPE.getKey(limbRegHelper.getEntityType()).equals(BuiltInRegistries.ENTITY_TYPE.getKey(type))) {
 					List<Item> possibleLimbs = new ArrayList<>();
-					Optional<HolderSet.Named<Item>> optionalTag = BuiltInRegistries.ITEM.getTag(limbRegHelper.getTag());
+					Optional<HolderSet.Named<Item>> optionalTag = BuiltInRegistries.ITEM.get(limbRegHelper.getTag());
 					if (optionalTag.isPresent()) {
 						HolderSet.Named<Item> tag = optionalTag.get();
 						tag.forEach(item -> {
@@ -57,7 +57,7 @@ public class LimbDropsModifier extends LootModifier {
 						});
 					}
 					if (Math.random() <= LimbConfig.COMMON.limbDropChance.get()) {
-						generatedLoot.add(new ItemStack(possibleLimbs.get(entity.level().random.nextInt(possibleLimbs.size()))));
+						generatedLoot.add(new ItemStack(possibleLimbs.get(entity.level().getRandom().nextInt(possibleLimbs.size()))));
 					}
 				}
 			}

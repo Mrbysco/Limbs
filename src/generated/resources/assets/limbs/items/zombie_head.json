@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "limbs:template_limb",
+    "model": {
+      "type": "limbs:part",
+      "base_model": "limbs:zombie_head",
+      "base_trim_texture": "head"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "limbs:template_limb",
+    "model": {
+      "type": "limbs:part",
+      "base_model": "limbs:wither_skeleton_right_arm",
+      "base_trim_texture": "right_arm"
+    }
+  }
+}

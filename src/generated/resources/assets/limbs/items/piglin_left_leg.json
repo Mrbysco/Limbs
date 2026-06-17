@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "limbs:template_limb",
+    "model": {
+      "type": "limbs:part",
+      "base_model": "limbs:piglin_left_leg",
+      "base_trim_texture": "left_leg"
+    }
+  }
+}

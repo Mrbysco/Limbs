@@ -1,19 +1,16 @@
 package com.mrbysco.limbs;
 
-import com.mrbysco.limbs.client.ClientHandler;
 import com.mrbysco.limbs.config.LimbConfig;
 import com.mrbysco.limbs.registry.LimbLootModifiers;
 import com.mrbysco.limbs.registry.LimbRegistry;
 import com.mrbysco.limbs.registry.PartRegistry;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,11 +28,6 @@ public class Limbs {
 
 		if (dist.isClient()) {
 			container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-			eventBus.addListener(ClientHandler::onRegisterClientExtensions);
-			eventBus.addListener(ClientHandler::onClientSetup);
-			NeoForge.EVENT_BUS.addListener(ClientHandler::onRenderArm);
-			NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ClientHandler::onPlayerRenderPre);
-			NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ClientHandler::onPlayerRenderPost);
 			PartRegistry.BODY_PARTS.register(eventBus);
 		}
 	}

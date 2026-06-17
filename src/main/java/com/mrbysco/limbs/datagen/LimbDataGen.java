@@ -1,292 +1,33 @@
 package com.mrbysco.limbs.datagen;
 
-import com.mrbysco.limbs.Limbs;
-import com.mrbysco.limbs.lootmodifiers.LimbDropsModifier;
-import com.mrbysco.limbs.registry.LimbRegistry;
-import com.mrbysco.limbs.registry.helper.LimbRegHelper;
-import com.mrbysco.limbs.util.LimbTags;
-import net.minecraft.advancements.critereon.EntityPredicate;
+import com.mrbysco.limbs.datagen.client.LimbLanguageProvider;
+import com.mrbysco.limbs.datagen.client.LimbModelProvider;
+import com.mrbysco.limbs.datagen.data.LimbEntityTags;
+import com.mrbysco.limbs.datagen.data.LimbItemTags;
+import com.mrbysco.limbs.datagen.data.LimbLootProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.EntityTypeTagsProvider;
-import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.client.model.generators.ModelFile.UncheckedModelFile;
-import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
-import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
 
-import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public class LimbDataGen {
 	@SubscribeEvent
-	public static void gatherData(GatherDataEvent event) {
+	public static void gatherData(GatherDataEvent.Client event) {
 		DataGenerator generator = event.getGenerator();
 		PackOutput packOutput = generator.getPackOutput();
-		ExistingFileHelper helper = event.getExistingFileHelper();
 		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-		if (event.includeServer()) {
-			LimbBlockTags limbBlockTagProvider;
-			generator.addProvider(event.includeServer(), limbBlockTagProvider = new LimbBlockTags(packOutput, lookupProvider, helper));
-			generator.addProvider(event.includeServer(), new LimbItemTags(packOutput, lookupProvider, limbBlockTagProvider.contentsGetter(), helper));
-			generator.addProvider(event.includeServer(), new LimbEntityTags(packOutput, lookupProvider, helper));
-			generator.addProvider(event.includeServer(), new LimbLootProvider(packOutput, lookupProvider));
-		}
-		if (event.includeClient()) {
-			generator.addProvider(event.includeClient(), new Language(packOutput));
-			generator.addProvider(event.includeClient(), new ItemModels(packOutput, helper));
-		}
-	}
+		generator.addProvider(true, new LimbItemTags(packOutput, lookupProvider));
+		generator.addProvider(true, new LimbEntityTags(packOutput, lookupProvider));
+		generator.addProvider(true, new LimbLootProvider(packOutput, lookupProvider));
 
-	private static class Language extends LanguageProvider {
-		public Language(PackOutput packOutput) {
-			super(packOutput, Limbs.MOD_ID, "en_us");
-		}
+		generator.addProvider(true, new LimbLanguageProvider(packOutput));
+		generator.addProvider(true, new LimbModelProvider(packOutput));
 
-		@Override
-		protected void addTranslations() {
-			this.add("itemGroup.limbs.tab", "Limbs");
-
-			this.add("curios.identifier.left_arm", "Left Arm");
-			this.add("curios.identifier.right_arm", "Right Arm");
-			this.add("curios.identifier.torso", "Torso");
-			this.add("curios.identifier.left_leg", "Left Leg");
-			this.add("curios.identifier.right_leg", "Right Leg");
-
-			this.add(LimbRegistry.SKELETON_LIMBS.getHead(), "Skeleton Head");
-			this.add(LimbRegistry.SKELETON_LIMBS.getTorso(), "Skeleton Torso");
-			this.add(LimbRegistry.SKELETON_LIMBS.getLeftArm(), "Skeleton Left Arm");
-			this.add(LimbRegistry.SKELETON_LIMBS.getRightArm(), "Skeleton Right Arm");
-			this.add(LimbRegistry.SKELETON_LIMBS.getLeftLeg(), "Skeleton Left Leg");
-			this.add(LimbRegistry.SKELETON_LIMBS.getRightLeg(), "Skeleton Right Leg");
-
-			this.add(LimbRegistry.STRAY_LIMBS.getHead(), "Stray Head");
-			this.add(LimbRegistry.STRAY_LIMBS.getTorso(), "Stray Torso");
-			this.add(LimbRegistry.STRAY_LIMBS.getLeftArm(), "Stray Left Arm");
-			this.add(LimbRegistry.STRAY_LIMBS.getRightArm(), "Stray Right Arm");
-			this.add(LimbRegistry.STRAY_LIMBS.getLeftLeg(), "Stray Left Leg");
-			this.add(LimbRegistry.STRAY_LIMBS.getRightLeg(), "Stray Right Leg");
-
-			this.add(LimbRegistry.WITHER_SKELETON_LIMBS.getHead(), "Wither Skeleton Head");
-			this.add(LimbRegistry.WITHER_SKELETON_LIMBS.getTorso(), "Wither Skeleton Torso");
-			this.add(LimbRegistry.WITHER_SKELETON_LIMBS.getLeftArm(), "Wither Skeleton Left Arm");
-			this.add(LimbRegistry.WITHER_SKELETON_LIMBS.getRightArm(), "Wither Skeleton Right Arm");
-			this.add(LimbRegistry.WITHER_SKELETON_LIMBS.getLeftLeg(), "Wither Skeleton Left Leg");
-			this.add(LimbRegistry.WITHER_SKELETON_LIMBS.getRightLeg(), "Wither Skeleton Right Leg");
-
-			this.add(LimbRegistry.ZOMBIE_LIMBS.getHead(), "Zombie Head");
-			this.add(LimbRegistry.ZOMBIE_LIMBS.getTorso(), "Zombie Torso");
-			this.add(LimbRegistry.ZOMBIE_LIMBS.getLeftArm(), "Zombie Left Arm");
-			this.add(LimbRegistry.ZOMBIE_LIMBS.getRightArm(), "Zombie Right Arm");
-			this.add(LimbRegistry.ZOMBIE_LIMBS.getLeftLeg(), "Zombie Left Leg");
-			this.add(LimbRegistry.ZOMBIE_LIMBS.getRightLeg(), "Zombie Right Leg");
-
-			this.add(LimbRegistry.HUSK_LIMBS.getHead(), "Husk Head");
-			this.add(LimbRegistry.HUSK_LIMBS.getTorso(), "Husk Torso");
-			this.add(LimbRegistry.HUSK_LIMBS.getLeftArm(), "Husk Left Arm");
-			this.add(LimbRegistry.HUSK_LIMBS.getRightArm(), "Husk Right Arm");
-			this.add(LimbRegistry.HUSK_LIMBS.getLeftLeg(), "Husk Left Leg");
-			this.add(LimbRegistry.HUSK_LIMBS.getRightLeg(), "Husk Right Leg");
-
-			this.add(LimbRegistry.DROWNED_LIMBS.getHead(), "Drowned Head");
-			this.add(LimbRegistry.DROWNED_LIMBS.getTorso(), "Drowned Torso");
-			this.add(LimbRegistry.DROWNED_LIMBS.getLeftArm(), "Drowned Left Arm");
-			this.add(LimbRegistry.DROWNED_LIMBS.getRightArm(), "Drowned Right Arm");
-			this.add(LimbRegistry.DROWNED_LIMBS.getLeftLeg(), "Drowned Left Leg");
-			this.add(LimbRegistry.DROWNED_LIMBS.getRightLeg(), "Drowned Right Leg");
-
-			this.add(LimbRegistry.ENDERMAN_LIMBS.getHead(), "Enderman Head");
-			this.add(LimbRegistry.ENDERMAN_LIMBS.getTorso(), "Enderman Torso");
-			this.add(LimbRegistry.ENDERMAN_LIMBS.getLeftArm(), "Enderman Left Arm");
-			this.add(LimbRegistry.ENDERMAN_LIMBS.getRightArm(), "Enderman Right Arm");
-			this.add(LimbRegistry.ENDERMAN_LIMBS.getLeftLeg(), "Enderman Left Leg");
-			this.add(LimbRegistry.ENDERMAN_LIMBS.getRightLeg(), "Enderman Right Leg");
-
-			this.add(LimbRegistry.PIGLIN_LIMBS.getHead(), "Piglin Head");
-			this.add(LimbRegistry.PIGLIN_LIMBS.getTorso(), "Piglin Torso");
-			this.add(LimbRegistry.PIGLIN_LIMBS.getLeftArm(), "Piglin Left Arm");
-			this.add(LimbRegistry.PIGLIN_LIMBS.getRightArm(), "Piglin Right Arm");
-			this.add(LimbRegistry.PIGLIN_LIMBS.getLeftLeg(), "Piglin Left Leg");
-			this.add(LimbRegistry.PIGLIN_LIMBS.getRightLeg(), "Piglin Right Leg");
-
-			this.add(LimbRegistry.ZOMBIFIED_PIGLIN_LIMBS.getHead(), "Zombified Piglin Head");
-			this.add(LimbRegistry.ZOMBIFIED_PIGLIN_LIMBS.getTorso(), "Zombified Piglin Torso");
-			this.add(LimbRegistry.ZOMBIFIED_PIGLIN_LIMBS.getLeftArm(), "Zombified Piglin Left Arm");
-			this.add(LimbRegistry.ZOMBIFIED_PIGLIN_LIMBS.getRightArm(), "Zombified Piglin Right Arm");
-			this.add(LimbRegistry.ZOMBIFIED_PIGLIN_LIMBS.getLeftLeg(), "Zombified Piglin Left Leg");
-			this.add(LimbRegistry.ZOMBIFIED_PIGLIN_LIMBS.getRightLeg(), "Zombified Piglin Right Leg");
-
-			this.add(LimbRegistry.PIGLIN_BRUTE_LIMBS.getHead(), "Piglin Brute Head");
-			this.add(LimbRegistry.PIGLIN_BRUTE_LIMBS.getTorso(), "Piglin Brute Torso");
-			this.add(LimbRegistry.PIGLIN_BRUTE_LIMBS.getLeftArm(), "Piglin Brute Left Arm");
-			this.add(LimbRegistry.PIGLIN_BRUTE_LIMBS.getRightArm(), "Piglin Brute Right Arm");
-			this.add(LimbRegistry.PIGLIN_BRUTE_LIMBS.getLeftLeg(), "Piglin Brute Left Leg");
-			this.add(LimbRegistry.PIGLIN_BRUTE_LIMBS.getRightLeg(), "Piglin Brute Right Leg");
-
-			addConfig("title", "Limbs Config", null);
-			addConfig("general", "General", "General settings");
-			addConfig("limbDropChance", "Limb Drop Chance", "The drop chance of limbs when a compatible mob is killed (Default: 0.01)");
-			addConfig("dropHeads", "Drop Heads", "If true, mobs have a chance of dropping their head [Should be disabled when using the Heads mod] (Default: true)");
-
-		}
-
-		/**
-		 * Add the translation for a config entry
-		 *
-		 * @param path        The path of the config entry
-		 * @param name        The name of the config entry
-		 * @param description The description of the config entry (optional in case of targeting "title" or similar entries that have no tooltip)
-		 */
-		private void addConfig(String path, String name, @org.jetbrains.annotations.Nullable String description) {
-			this.add("limbs.configuration." + path, name);
-			if (description != null && !description.isEmpty())
-				this.add("limbs.configuration." + path + ".tooltip", description);
-		}
-	}
-
-	private static class ItemModels extends ItemModelProvider {
-		public ItemModels(PackOutput packOutput, ExistingFileHelper helper) {
-			super(packOutput, Limbs.MOD_ID, helper);
-		}
-
-		@Override
-		protected void registerModels() {
-			for (DeferredHolder<Item, ? extends Item> limbObject : LimbRegistry.ITEMS.getEntries()) {
-				makeLimb(limbObject.getId());
-			}
-		}
-
-		private void makeLimb(ResourceLocation location) {
-			getBuilder(location.getPath())
-					.parent(new UncheckedModelFile(mcLoc("item/template_skull")))
-					.transforms().transform(ItemDisplayContext.THIRD_PERSON_RIGHT_HAND)
-					.rotation(45, 45, 0)
-					.translation(0, 1.125F, 6.125F)
-					.scale(0.5F, 0.5F, 0.5F).end()
-					.transform(ItemDisplayContext.THIRD_PERSON_LEFT_HAND)
-					.rotation(45, 45, 0)
-					.translation(5.6875F, 5.125F, 2.125F)
-					.scale(0.5F, 0.5F, 0.5F).end()
-					.transform(ItemDisplayContext.FIRST_PERSON_LEFT_HAND)
-					.rotation(0, 0, 0)
-					.translation(8, 6, 8)
-					.scale(1.0F, 1.0F, 1.0F).end()
-					.transform(ItemDisplayContext.FIRST_PERSON_RIGHT_HAND)
-					.rotation(0, 0, 0)
-					.translation(-8, 6, 8)
-					.scale(1.0F, 1.0F, 1.0F).end()
-					.transform(ItemDisplayContext.GUI)
-					.rotation(30, 45, 0)
-					.translation(0, 2.5F, 0)
-					.scale(1.0F, 1.0F, 1.0F).end()
-					.transform(ItemDisplayContext.FIXED)
-					.rotation(0, 180, 0)
-					.translation(8, 10, -8)
-					.scale(1.0F, 1.0F, 1.0F).end()
-					.transform(ItemDisplayContext.GROUND)
-					.rotation(0, 0, 0)
-					.translation(-4, 6, 4)
-					.scale(0.5F, 0.5F, 0.5F).end();
-		}
-	}
-
-	public static class LimbBlockTags extends BlockTagsProvider {
-
-		public LimbBlockTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper helper) {
-			super(output, lookupProvider, Limbs.MOD_ID, helper);
-		}
-
-		@Override
-		protected void addTags(HolderLookup.Provider provider) {
-
-		}
-	}
-
-	public static class LimbItemTags extends ItemTagsProvider {
-
-		public LimbItemTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagLookup<Block>> blockTagProvider, ExistingFileHelper helper) {
-			super(packOutput, lookupProvider, blockTagProvider, Limbs.MOD_ID, helper);
-		}
-
-		@Override
-		protected void addTags(HolderLookup.Provider provider) {
-			this.tag(LimbTags.HEAD).addOptionalTag(ItemTags.SKULLS);
-
-			makeLimbTags(LimbRegistry.SKELETON_LIMBS);
-			makeLimbTags(LimbRegistry.STRAY_LIMBS);
-			makeLimbTags(LimbRegistry.WITHER_SKELETON_LIMBS);
-			makeLimbTags(LimbRegistry.ZOMBIE_LIMBS);
-			makeLimbTags(LimbRegistry.HUSK_LIMBS);
-			makeLimbTags(LimbRegistry.DROWNED_LIMBS);
-			makeLimbTags(LimbRegistry.ENDERMAN_LIMBS);
-			makeLimbTags(LimbRegistry.PIGLIN_LIMBS);
-			makeLimbTags(LimbRegistry.ZOMBIFIED_PIGLIN_LIMBS);
-			makeLimbTags(LimbRegistry.PIGLIN_BRUTE_LIMBS);
-		}
-
-
-		private void makeLimbTags(LimbRegHelper limbs) {
-			this.tag(limbs.getTag()).add(limbs.getHead(), limbs.getTorso(), limbs.getLeftArm(), limbs.getRightArm(), limbs.getLeftLeg(), limbs.getRightLeg());
-			this.tag(LimbTags.HEAD).add(limbs.getHead());
-			this.tag(LimbTags.TORSO).add(limbs.getTorso());
-			this.tag(LimbTags.LEFT_ARM).add(limbs.getLeftArm());
-			this.tag(LimbTags.RIGHT_ARM).add(limbs.getRightArm());
-			this.tag(LimbTags.LEFT_LEG).add(limbs.getLeftLeg());
-			this.tag(LimbTags.RIGHT_LEG).add(limbs.getRightLeg());
-		}
-	}
-
-	public static class LimbEntityTags extends EntityTypeTagsProvider {
-		public static final TagKey<EntityType<?>> LIMB_ABLE = create(ResourceLocation.fromNamespaceAndPath(Limbs.MOD_ID, "limb_able"));
-
-		public LimbEntityTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
-			super(packOutput, lookupProvider, Limbs.MOD_ID, existingFileHelper);
-		}
-
-		@Override
-		protected void addTags(HolderLookup.Provider provider) {
-			this.tag(LIMB_ABLE).add(EntityType.SKELETON, EntityType.STRAY, EntityType.WITHER_SKELETON, EntityType.ZOMBIE,
-					EntityType.HUSK, EntityType.DROWNED, EntityType.ENDERMAN, EntityType.PIGLIN, EntityType.PIGLIN_BRUTE, EntityType.ZOMBIFIED_PIGLIN);
-		}
-
-		private static TagKey<EntityType<?>> create(ResourceLocation location) {
-			return TagKey.create(Registries.ENTITY_TYPE, location);
-		}
-	}
-
-	public static class LimbLootProvider extends GlobalLootModifierProvider {
-		public LimbLootProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-			super(packOutput, lookupProvider, Limbs.MOD_ID);
-		}
-
-		@Override
-		protected void start() {
-			this.add("limb_drops", new LimbDropsModifier(
-					new LootItemCondition[]{
-							LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(LimbEntityTags.LIMB_ABLE)).build(),
-							LootItemKilledByPlayerCondition.killedByPlayer().build()
-					}));
-		}
 	}
 }

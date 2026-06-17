@@ -1,13 +1,18 @@
 package com.mrbysco.limbs.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.player.AvatarRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.ModList;
@@ -15,29 +20,38 @@ import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.client.ICurioRenderer;
 
 public class CurioSkullRenderer implements ICurioRenderer {
+	private final ItemStackRenderState itemRenderState = new ItemStackRenderState();
+
 	@Override
-	public <T extends LivingEntity, M extends EntityModel<T>> void render(ItemStack stack, SlotContext slotContext,
-	                                                                      PoseStack poseStack, RenderLayerParent<T, M> renderLayerParent,
-	                                                                      MultiBufferSource multiBufferSource, int light, float limbSwing,
-	                                                                      float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+	public <S extends LivingEntityRenderState, M extends EntityModel<? super S>> void render(ItemStack stack, SlotContext slotContext,
+	                                                                                         PoseStack poseStack, SubmitNodeCollector nodeCollector,
+	                                                                                         int packedLight, S renderState,
+	                                                                                         RenderLayerParent<S, M> renderLayerParent,
+	                                                                                         EntityRendererProvider.Context context,
+	                                                                                         float yRotation, float xRotation
+	) {
 		if (slotContext.identifier().equals("head") && slotContext.visible()) {
 			if (!(renderLayerParent.getModel() instanceof HeadedModel headedModel)) {
 				return;
 			}
+
 			poseStack.pushPose();
-
-			ICurioRenderer.followHeadRotations(slotContext.entity(), headedModel.getHead());
-			headedModel.getHead().translateAndRotate(poseStack);
-
-			poseStack.scale(1.25F, -1.25F, -1.25F);
-			poseStack.translate(0, 0.5F, 0);
+			Minecraft mc = Minecraft.getInstance();
+			AvatarRenderer<?> playerrenderer = (AvatarRenderer) mc.getEntityRenderDispatcher().<AbstractClientPlayer>getRenderer(mc.player);
+			playerrenderer.getModel().getHead().translateAndRotate(poseStack);
+			poseStack.translate(0.0D, -0.25D, 0.0D);
+			poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+			poseStack.scale(0.65F, -0.65F, -0.65F);
 
 			if (ModList.get().isLoaded("fivehead")) {
 				com.mrbysco.limbs.compat.FiveHeadSupport.scaleHead(stack, poseStack);
 			}
 
-			var itemRenderer = Minecraft.getInstance().getItemRenderer();
-			itemRenderer.renderStatic(stack, ItemDisplayContext.HEAD, light, OverlayTexture.NO_OVERLAY, poseStack, multiBufferSource, null, 0);
+			context.getItemModelResolver()
+					.updateForTopItem(itemRenderState, stack, ItemDisplayContext.HEAD, null, null, 0);
+
+			itemRenderState.submit(poseStack, nodeCollector, packedLight, OverlayTexture.NO_OVERLAY, renderState.outlineColor);
+
 			poseStack.popPose();
 		}
 	}
